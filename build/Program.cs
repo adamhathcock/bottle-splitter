@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using GlobExpressions;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
@@ -11,7 +10,6 @@ const string Restore = "restore";
 const string Build = "build";
 const string Test = "test";
 const string Format = "format";
-const string Publish = "publish";
 
 Target(
     Clean,
@@ -54,7 +52,10 @@ Target(
     DependsOn(Restore),
     () =>
     {
-        Run("dotnet", "build src/BottleSplitter/BottleSplitter.csproj -c Release --no-restore --output ./output");
+        Run(
+            "dotnet",
+            "build src/BottleSplitter/BottleSplitter.csproj -c Release --no-restore --output ./output"
+        );
     }
 );
 
@@ -75,6 +76,6 @@ Target(
     }
 );
 
-Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
+Target("default", DependsOn(Test), () => Console.WriteLine("Done!"));
 
 await RunTargetsAndExitAsync(args);
