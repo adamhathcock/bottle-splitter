@@ -1,5 +1,7 @@
 <Project>
   <ItemGroup>
+    <PackageVersion Include="Bullseye" Version="5.0.0" />
+    <PackageVersion Include="Glob" Version="1.1.9" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
     <PackageVersion Include="MudBlazor" Version="6.19.1" />
@@ -9,5 +11,6 @@
     <PackageVersion Include="Octokit" Version="11.0.1" />
     <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="5.5.0" />
     <PackageVersion Include="OpenIddict.AspNetCore" Version="5.5.0" />
+    <PackageVersion Include="SimpleExec" Version="12.0.0" />
   </ItemGroup>
 </Project>
