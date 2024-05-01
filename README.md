@@ -4,7 +4,7 @@ This is a small Blazor app to manage Whisky bottles.
 
 ## App Features
 
-Please see the Issues
+Please see the [Issues](https://github.com/adamhathcock/bottle-splitter/issues)
 
 ## App non-functionals
 
