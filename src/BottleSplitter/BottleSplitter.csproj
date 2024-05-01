@@ -6,7 +6,6 @@
     <PackageReference Include="MudBlazor"  />
     <PackageReference Include="Narochno.EnvFile"  />
     <PackageReference Include="Narochno.Primitives"  />
-    <PackageReference Include="NSwag.AspNetCore"  />
     <PackageReference Include="Octokit" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" />
     <PackageReference Include="OpenIddict.AspNetCore" />
