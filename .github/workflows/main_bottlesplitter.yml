@@ -32,4 +32,4 @@ jobs:
           app-name: 'bottlesplitter'
           slot-name: 'Production'
           package: './output'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E7F47F732EED474B98323217A69DC137 }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
