@@ -1,0 +1,18 @@
+﻿@page "/logout"
+
+<PageTitle>Logout</PageTitle>
+
+<MudText Typo="Typo.h3">Logout</MudText>
+
+<AuthorizeView>
+    <Authorized>
+        <MudAlert Severity="Severity.Info">Logging you out...</MudAlert>
+    </Authorized>
+    <NotAuthorized>
+        <MudAlert Severity="Severity.Success">You're logged out. <MudLink Href="/login">Log in.</MudLink></MudAlert>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

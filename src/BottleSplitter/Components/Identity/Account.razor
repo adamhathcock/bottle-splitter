@@ -1,0 +1,20 @@
+@page "/account"
+@using BottleSplitter.Infrastructure
+
+<PageTitle>Register</PageTitle>
+
+<MudText Typo="Typo.h3">Account</MudText>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <MudAlert Severity="Severity.Error">You're already not logged in.</MudAlert>
+    </NotAuthorized>
+    <Authorized>
+            <MudStack Spacing="3">
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.body1">You're logged in as @context.User.GetName(). (@context.User.GetEmail()) via @context.User.GetNameIdentifier()</MudText>
+                </MudItem>
+            </MudStack>
+    </Authorized>
+</AuthorizeView>
+

@@ -1,0 +1,13 @@
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+    <PackageVersion Include="MudBlazor" Version="6.19.1" />
+    <PackageVersion Include="Narochno.EnvFile" Version="1.0.1" />
+    <PackageVersion Include="Narochno.Primitives" Version="4.0.0" />
+    <PackageVersion Include="NSwag.AspNetCore" Version="14.0.7" />
+    <PackageVersion Include="Octokit" Version="11.0.1" />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="5.5.0" />
+    <PackageVersion Include="OpenIddict.AspNetCore" Version="5.5.0" />
+  </ItemGroup>
+</Project>
