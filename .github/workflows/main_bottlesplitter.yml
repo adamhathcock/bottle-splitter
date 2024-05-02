@@ -32,7 +32,7 @@ jobs:
           popd
 
       - name: 'Run Azure Functions Action'
-        uses: Azure/webapps_deploy@v3
+        uses: Azure/webapps-deploy@v3
         id: fa
         with:
           app-name: 'bottlesplitter'
