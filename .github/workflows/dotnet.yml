@@ -1,0 +1,26 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and Test
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - run:  dotnet run --project build/build.csproj
+
