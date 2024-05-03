@@ -1,15 +1,14 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Components.Server;
+using Narochno.Primitives;
 
 namespace BottleSplitter.Infrastructure;
 
-public class CustomAuthenticationStateProvider()
-    : AuthenticationStateProvider
+public class CustomAuthenticationStateProvider
+    : ServerAuthenticationStateProvider
 {
-    public override Task<AuthenticationState> GetAuthenticationStateAsync()
-    {
-        return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
-    }
+
+
 }

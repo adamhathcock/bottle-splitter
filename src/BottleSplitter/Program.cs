@@ -3,16 +3,18 @@ using BottleSplitter.Components;
 using BottleSplitter.Endpoints;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
-using BottleSplitter.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Narochno.EnvFile;
+using OpenIddict.Validation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,26 +38,22 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents(x =>
 builder.Services.AddMudServices();
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme).AddIdentityCookies();
+builder.Services.AddAuthorization()
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddIdentity<SplitterUser, IdentityRole>()
+    .AddEntityFrameworkStores<SplitterDbContext>()
+    .AddDefaultTokenProviders();
 
-builder
-    .Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    })
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/login";
-        options.LogoutPath = "/logout";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(50);
-        options.SlidingExpiration = false;
-    });
 builder.AddOpenIddictSettings();
 
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<IThemeService, ThemeService>();
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<CustomAuthenticationStateProvider>());
+builder.Services.AddScoped<ISessionManager, SessionManager>();
+builder.Services.TryAddEnumerable(
+    ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

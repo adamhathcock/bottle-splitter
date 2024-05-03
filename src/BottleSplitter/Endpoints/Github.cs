@@ -4,8 +4,10 @@ using System.Security.Claims;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Shared;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Narochno.Primitives;
 using Octokit;
@@ -42,7 +44,7 @@ public static class Github
                 );
 
                 // Build an identity based on the external claims and that will be used to create the authentication cookie.
-                var identity = new ClaimsIdentity(authenticationType: "ExternalLogin");
+                var identity = new ClaimsIdentity(authenticationType: CookieAuthenticationDefaults.AuthenticationScheme);
 
                 var principal = result.Principal;
                 if (principal is null)
@@ -97,19 +99,19 @@ public static class Github
                                     or OpenIddictClientAspNetCoreConstants.Tokens.RefreshToken
                         )
                 );
+                var token =  properties
+                    .GetTokens()
+                    .First(x =>
+                        x.Name
+                        == OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken
+                    )
+                    .Value;
+                identity.SetToken(token);
 
                 if (identity.GetEmail().IsNullOrEmpty())
                 {
                     var client = new GitHubClient(new ProductHeaderValue(Consts.ClientId));
-                    client.Credentials = new Credentials(
-                        properties
-                            .GetTokens()
-                            .First(x =>
-                                x.Name
-                                == OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken
-                            )
-                            .Value
-                    );
+                    client.Credentials = new Credentials(token);
                     var emails = await client.User.Email.GetAll();
                     identity.SetClaim(ClaimTypes.Email, emails.First().Email);
                 }
@@ -118,7 +120,10 @@ public static class Github
                 //
                 // For scenarios where the default sign-in handler configured in the ASP.NET Core
                 // authentication options shouldn't be used, a specific scheme can be specified here.
-                return Results.SignIn(new ClaimsPrincipal(identity), properties);
+                var user = new ClaimsPrincipal(identity);
+               // var provider = context.RequestServices.GetRequiredService<CustomAuthenticationStateProvider>();
+               // await provider.SetAuthenticationState(user);
+                return Results.SignIn(user, properties, CookieAuthenticationDefaults.AuthenticationScheme);
             }
         );
     }
