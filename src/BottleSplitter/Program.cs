@@ -3,6 +3,7 @@ using BottleSplitter.Components;
 using BottleSplitter.Endpoints;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
+using BottleSplitter.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -27,7 +28,11 @@ builder.Services.AddDbContext<SplitterDbContext>(options =>
 });
 
 // Add services to the container.
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents(x =>
+{
+    x.DetailedErrors = true;
+    x.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(4);
+});
 builder.Services.AddMudServices();
 
 builder.Services.AddAuthorization();
@@ -50,6 +55,7 @@ builder
 builder.AddOpenIddictSettings();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<IThemeService, ThemeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -75,6 +81,7 @@ app.UseAuthorization();
 app.UseAntiforgery();
 app.UseGithub();
 
-app.MapRazorComponents<App>().AllowAnonymous().RequireAuthorization();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode()
+    .AllowAnonymous().RequireAuthorization();
 
 app.Run();

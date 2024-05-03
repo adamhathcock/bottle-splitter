@@ -3,6 +3,8 @@ version: '3'
 services:
   database:
     image: 'postgres:latest'
+    ports:
+      - 15432:5432
     env_file:
       - .env
     networks:
@@ -10,14 +12,18 @@ services:
     volumes:
       - ./db-data/:/var/lib/postgresql/data/
 
-  dotnet:
-    build: .
+  pgadmin:
+    image: dpage/pgadmin4
     ports:
-      - 7878:8080
+      - 15433:80
     env_file:
       - .env
+    depends_on:
+      - database
     networks:
       - postgres-network
+    volumes:
+      - ./pgadmin-data/:/var/lib/pgadmin/
 
 networks:
   postgres-network:
