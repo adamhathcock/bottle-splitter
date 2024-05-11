@@ -37,6 +37,8 @@ builder
     });
 builder.Services.AddMudServices();
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddAuthorization();
 builder.Services.AddBottleSplitterAuth(builder.Configuration);
 
@@ -78,6 +80,7 @@ app.UseAntiforgery();
 app.AddSignout();
 app.UseGithub();
 
+app.MapHealthChecks("/health");
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
