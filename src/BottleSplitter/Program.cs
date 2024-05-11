@@ -3,7 +3,6 @@ using BottleSplitter.Components;
 using BottleSplitter.Endpoints;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
@@ -14,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Narochno.EnvFile;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,17 @@ builder
 builder.Services.AddMudServices();
 
 builder.Services.AddHealthChecks();
+builder.Services.AddSerilog(
+    (services, lc) =>
+        lc
+            .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
+            .ReadFrom.Configuration(builder.Configuration)
+            .ReadFrom.Services(services)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+);
 
 builder.Services.AddAuthorization();
 builder.Services.AddBottleSplitterAuth(builder.Configuration);
@@ -51,7 +63,7 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
 );
 builder.Services.AddScoped<ISessionManager, SessionManager>();
 builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
-builder.WebHost.UseWebRoot("wwwroot");
+builder.WebHost.UseWebRoot("/app/wwwroot");
 builder.WebHost.UseStaticWebAssets();
 var app = builder.Build();
 

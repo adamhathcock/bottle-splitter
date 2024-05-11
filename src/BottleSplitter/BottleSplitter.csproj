@@ -8,5 +8,6 @@
     <PackageReference Include="Narochno.EnvFile"  />
     <PackageReference Include="Narochno.Primitives"  />
     <PackageReference Include="Octokit" />
+    <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
 </Project>
