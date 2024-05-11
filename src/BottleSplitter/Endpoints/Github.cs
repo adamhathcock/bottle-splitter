@@ -16,12 +16,16 @@ namespace BottleSplitter.Endpoints;
 
 public static class Github
 {
-    public static void UseGithub(this WebApplication application) => application.MapGet("challenge/github",
-        () => Results.Challenge(properties: new ()
-            {
-                RedirectUri = "/"
-            },
-            authenticationSchemes: [GitHubAuthenticationDefaults.AuthenticationScheme]));
+    public static void UseGithub(this WebApplication application) =>
+        application.MapGet(
+            "challenge/github",
+            () =>
+                Results.Challenge(
+                    properties: new() { RedirectUri = "/" },
+                    authenticationSchemes: [GitHubAuthenticationDefaults.AuthenticationScheme]
+                )
+        );
+
     public static void AddGithub(
         this AuthenticationBuilder builder,
         IConfiguration configuration
