@@ -25,11 +25,18 @@ public class SessionManager(ProtectedLocalStorage protectedLocalStorage) : ISess
         }
         return _session;
     }
-     public async Task SetSessionToken(Session session)
-     {
-         await protectedLocalStorage.SetAsync("token", session);
-         _session = session;
-     }
+
+    public async Task SetSessionToken(Session session)
+    {
+        await protectedLocalStorage.SetAsync("token", session);
+        _session = session;
+    }
 }
 
-public record Session(string Type, string? AccessToken, string? Email, string? Name, string? UserId);
+public record Session(
+    string Type,
+    string? AccessToken,
+    string? Email,
+    string? Name,
+    string? UserId
+);

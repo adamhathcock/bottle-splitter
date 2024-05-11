@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using BottleSplitter.Infrastructure
+@inherits LayoutComponentBase
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
 
@@ -14,8 +15,12 @@
     <MudDrawer Open="@_drawerOpen">
         <MudNavMenu>
             <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-            <MudNavLink Href="/account" Match="NavLinkMatch.Prefix">Account</MudNavLink>
-            <MudNavLink Href="/logout" Match="NavLinkMatch.Prefix">Logout</MudNavLink>
+         @if (_authenticated)
+            {
+                <MudNavLink Href="/account" Match="NavLinkMatch.Prefix">Account</MudNavLink>
+                <MudNavLink Href="/logout" Match="NavLinkMatch.Prefix">Logout</MudNavLink>
+
+            }
             <MudNavLink Href="/challenge/github" Match="NavLinkMatch.Prefix">Login via Github</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
@@ -30,9 +35,19 @@
     private MudTheme _theme = new();
     private bool _isDarkMode;
     bool _drawerOpen = true;
+    private bool _authenticated;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        _authenticated = (await CustomAuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity?.IsAuthenticated ?? false;
+    }
+
+    [Inject]
+    public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
 }

@@ -15,7 +15,6 @@ using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Narochno.EnvFile;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvFile();
@@ -29,35 +28,27 @@ builder.Services.AddDbContext<SplitterDbContext>(options =>
 });
 
 // Add services to the container.
-builder.Services.AddRazorComponents().AddInteractiveServerComponents(x =>
-{
-    x.DetailedErrors = true;
-    x.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(4);
-});
+builder
+    .Services.AddRazorComponents()
+    .AddInteractiveServerComponents(x =>
+    {
+        x.DetailedErrors = true;
+        x.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(4);
+    });
 builder.Services.AddMudServices();
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(o =>
-{
-    o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
-}).AddCookie(o =>
-{
-    // set the path for the authentication challenge
-    o.LoginPath = "/signin";
-    // set the path for the sign out
-    o.LogoutPath = "/signout";
-}).AddGithub(builder.Configuration);
+builder.Services.AddBottleSplitterAuth(builder.Configuration);
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<CustomAuthenticationStateProvider>());
+builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
+    sp.GetRequiredService<CustomAuthenticationStateProvider>()
+);
 builder.Services.AddScoped<ISessionManager, SessionManager>();
-builder.Services.TryAddEnumerable(
-    ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
+builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
 builder.WebHost.UseStaticWebAssets();
 var app = builder.Build();
 
@@ -85,6 +76,7 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.AddSignout();
+app.UseGithub();
 
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
