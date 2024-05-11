@@ -6,7 +6,7 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-
+  SERVICE_NAME: 'bottle-splitter'
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -52,3 +52,53 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_SHA_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_SHA_TAG
+
+      - name: Push the Docker Image to lightsail
+        env: 
+          IMAGE_SHA_TAG: ${{ github.sha }}
+          IMAGE_URL: ${{ steps.login-ecr.outputs.registry }}/${{env.SERVICE_NAME}}:${{ github.sha }}
+        run: >
+          aws lightsail push-container-image
+          --service-name ${{env.SERVICE_NAME}}
+          --image $IMAGE_URL
+          --region eu-west-2
+          --label git-push      
+
+      - name: Save updated LIGHTSAIL_IMAGE_TAG 
+        run: |
+          echo "LIGHTSAIL_DOCKER_IMAGE=$(aws lightsail get-container-images --service-name ${{ env.SERVICE_NAME }} --region eu-west-2 | jq -r .containerImages[0].image)"  >> $GITHUB_ENV
+        
+      - name: Start New Deployment to Light Sail
+        run: |
+          aws lightsail create-container-service-deployment  --region us-east-2 \
+          --service-name ${{env.SERVICE_NAME}} \
+          --output yaml \
+          --containers "{
+            \"${{env.SERVICE_NAME}}\": {
+              \"image\": \"$LIGHTSAIL_DOCKER_IMAGE\",
+              \"environment\": {
+                  \"VERSION\": \"${{github.run_number}}\"
+                },
+              \"ports\": {
+                \"5000\": \"HTTP\"
+              }
+            }
+          }" \
+          --public-endpoint "{
+            \"containerName\": \"${{env.SERVICE_NAME}}\",
+            \"containerPort\": 5000,
+            \"healthCheck\": {
+              \"path\": \"/healthcheck/liveness\",
+              \"intervalSeconds\": 10
+            }
+          }"      
+      - name: Push the Docker Image to lightsail
+        env: 
+          IMAGE_SHA_TAG: ${{ github.sha }}
+          IMAGE_URL: ${{ steps.login-ecr.outputs.registry }}/${{env.SERVICE_NAME}}:${{ github.sha }}
+        run: >
+          aws lightsail push-container-image
+          --service-name ${{ env.SERVICE_NAME }}
+          --image $IMAGE_URL
+          --region us-east-2
+          --label git-push
