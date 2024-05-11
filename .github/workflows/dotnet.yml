@@ -8,7 +8,7 @@ env:
   DOTNET_VERSION: '8.0.x'
   SERVICE_NAME: 'bottle-splitter'
 jobs:
-  build-and-test:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
