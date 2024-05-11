@@ -32,8 +32,8 @@ public static class Github
     ) =>
         builder.AddGitHub(o =>
         {
-            o.ClientId = configuration["GITHUB_ID"].NotNull();
-            o.ClientSecret = configuration["GITHUB_SECRET"].NotNull();
+            o.ClientId = configuration["OAUTH_GITHUB_ID"].NotNull();
+            o.ClientSecret = configuration["OAUTH_GITHUB_SECRET"].NotNull();
             o.CallbackPath = "/callback/github";
             o.Scope.Add("emails:read");
 
