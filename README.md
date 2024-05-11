@@ -8,10 +8,9 @@ Please see the [Issues](https://github.com/adamhathcock/bottle-splitter/issues)
 
 ## App non-functionals
 
-- Hosting on Azure with Free Tier (Functions and Azure SQL)
-- Blazor Server Side Rendering only
+- Hosting on AWS Lightsail with containers and DB
+- Blazor Server
   - Mudblazor
-  - Look at HTMX
 - Not storing authenication:
   - Github
   - Google
