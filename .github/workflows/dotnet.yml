@@ -70,7 +70,7 @@ jobs:
         
       - name: Start New Deployment to Light Sail
         run: |
-          aws lightsail create-container-service-deployment  --region us-east-2 \
+          aws lightsail create-container-service-deployment  --region eu-west-2 \
           --service-name ${{env.SERVICE_NAME}} \
           --output yaml \
           --containers "{
@@ -100,5 +100,5 @@ jobs:
           aws lightsail push-container-image
           --service-name ${{ env.SERVICE_NAME }}
           --image $IMAGE_URL
-          --region us-east-2
+          --region eu-west-2
           --label git-push
