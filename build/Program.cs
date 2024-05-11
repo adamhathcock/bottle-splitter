@@ -66,7 +66,7 @@ Target(
             {
                 Directory.CreateDirectory(dir);
             }
-            File.Copy(Path.Combine("src", "BottleSplitter", "wwwroot", file), newPath);
+            File.Copy(Path.Combine("src", "BottleSplitter", "wwwroot", file), newPath, true);
         }
     }
 );

@@ -80,13 +80,13 @@ jobs:
                   \"VERSION\": \"${{github.run_number}}\"
                 },
               \"ports\": {
-                \"5000\": \"HTTP\"
+                \"8080\": \"HTTP\"
               }
             }
           }" \
           --public-endpoint "{
             \"containerName\": \"${{env.SERVICE_NAME}}\",
-            \"containerPort\": 5000,
+            \"containerPort\": 8080,
             \"healthCheck\": {
               \"path\": \"/health\",
               \"intervalSeconds\": 10
