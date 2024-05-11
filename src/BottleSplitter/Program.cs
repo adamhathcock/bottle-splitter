@@ -51,7 +51,8 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
 );
 builder.Services.AddScoped<ISessionManager, SessionManager>();
 builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
-
+builder.WebHost.UseWebRoot("wwwroot");
+builder.WebHost.UseStaticWebAssets();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,7 +67,6 @@ else
     await using var scope = app.Services.CreateAsyncScope();
     await Seeder.InitializeAsync(scope.ServiceProvider);
 }
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
