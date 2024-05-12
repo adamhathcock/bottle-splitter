@@ -1,9 +1,17 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace BottleSplitter.Model;
 
-internal class SplitterUser : IdentityUser
+public class SplitterUser
 {
-    public IEnumerable<IdentityRole>? Roles { get; set; }
+    public Guid Id { get; set; } = Guid.Empty;
+    public string Email { get; set; } = string.Empty;
+    public UserSource Source { get; set; } = UserSource.Unknown;
+}
+
+public enum UserSource
+{
+    Unknown = 0,
+    Github = 1,
+    Google = 2
 }

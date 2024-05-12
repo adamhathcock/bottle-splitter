@@ -1,32 +1,31 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using BottleSplitter.Infrastructure
+@using BottleSplitter.Services
 @inherits LayoutComponentBase
+@inject IPreferencesService PreferencesService
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudThemeProvider @bind-IsDarkMode="@PreferencesService.DarkMode" Theme="_theme"/>
 
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        My Application
-        <MudSwitch @bind-Value="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
-    </MudAppBar>
-    <MudDrawer Open="@_drawerOpen">
-        <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-             @if (_authenticated)
+        <MudMenu Icon="@Icons.Material.Filled.Menu">
+            <MudMenuItem  Href="/">Home</MudMenuItem>
+            @if (_authenticated)
             {
-                <MudNavLink Href="/account" Match="NavLinkMatch.Prefix">Account</MudNavLink>
-                <MudNavLink Href="/logout" Match="NavLinkMatch.Prefix">Logout</MudNavLink>
+                <MudMenuItem  Href="/account">Account</MudMenuItem>
+                <MudMenuItem  Href="/logout">Logout</MudMenuItem>
             }
             else
             {
-                <MudNavLink Href="/challenge/github" Match="NavLinkMatch.Prefix">Login via Github</MudNavLink>
+                <MudMenuItem Href="/challenge/github">Login via Github</MudMenuItem>
             }
-        </MudNavMenu>
-    </MudDrawer>
+        </MudMenu>
+        Bottle Splitter!
+        <MudSwitch ValueChanged="Callback" Value="@PreferencesService.DarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
+    </MudAppBar>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Medium">
             @Body
@@ -36,21 +35,22 @@
 
 @code {
     private MudTheme _theme = new();
-    private bool _isDarkMode;
-    bool _drawerOpen = true;
     private bool _authenticated;
-
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
 
     protected override async Task OnInitializedAsync()
     {
         _authenticated = (await CustomAuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity?.IsAuthenticated ?? false;
+        await PreferencesService.Load();
     }
 
     [Inject]
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+
+    private async Task Callback(bool val)
+    {
+        PreferencesService.DarkMode = val;
+        await PreferencesService.Save();
+    }
+
 }
