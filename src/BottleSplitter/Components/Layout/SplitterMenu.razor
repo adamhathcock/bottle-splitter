@@ -3,12 +3,14 @@
 
 @inject NavigationManager NavigationManager
 
-<MudMenu Icon="@Icons.Material.Filled.Menu">
+<MudMenu Icon="@Icons.Material.Filled.Menu" Dense="true"  EndIcon="@Icons.Material.Filled.KeyboardArrowDown">
     <MudMenuItem  Href="/">Home</MudMenuItem>
     @if (_authenticated)
     {
-        <MudMenuItem Href="/account">Account</MudMenuItem>
-        <MudMenuItem Href="/logout">Logout</MudMenuItem>
+        <MudMenuItem Href="/add-split" Icon="@Icons.Custom.Brands.Awesome">Add a Split</MudMenuItem>
+
+        <MudMenuItem Href="/account" Icon="@Icons.Material.Filled.Accessibility">Account</MudMenuItem>
+        <MudMenuItem Href="/logout" Icon="@Icons.Material.Filled.Logout">Logout</MudMenuItem>
     }
     else
     {

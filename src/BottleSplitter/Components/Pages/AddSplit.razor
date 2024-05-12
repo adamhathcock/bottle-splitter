@@ -11,9 +11,8 @@
 @using Narochno.Primitives
 
 <PageTitle>Add a New Bottle Split</PageTitle>
-<MudText Typo="Typo.h6">Add a New Bottle Split with @_splitterUser.Email</MudText>
+<MudText Typo="Typo.h6">Add a New Bottle Split with @_splitterUser?.Email</MudText>
 
-<DataAnnotationsValidator/>
 <MudCard>
     <MudForm Model="@_model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)" ValidationDelay="0">
         <MudCardContent>
@@ -21,9 +20,9 @@
                           @bind-Value="_model.Name" For="@(() => _model.Name)"/>
             <MudTextField Label="Description" HelperText="Optional Description of the split" Class="mt-3"
                           @bind-Value="_model.Description" For="@(() => _model.Description)"/>
-            <MudTextField Label="Password" HelperText="Optional Url (e.g. Whiskybase)" Class="mt-3"
+            <MudTextField Label="Details Url" HelperText="Optional Url that describes the bottle (e.g. Whiskybase)" Class="mt-3"
                           @bind-Value="_model.DetailsUrl" For="@(() => _model.DetailsUrl)" />
-            <MudTextField Label="Password" HelperText="Optional Image Url" Class="mt-3"
+            <MudTextField Label="Image Url" HelperText="Optional" Class="mt-3"
                           @bind-Value="_model.ImageUrl" For="@(() => _model.ImageUrl)"/>
         </MudCardContent>
         <MudCardActions>
@@ -35,8 +34,8 @@
 
 @code {
     readonly BottleSplit _model = new ();
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    private SplitterUser _splitterUser = default!;
+
+    private SplitterUser? _splitterUser;
 
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     MudForm _form = default!;
@@ -48,7 +47,7 @@
     {
         var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
         var email = state.User.GetEmail().NotNull();
-        _splitterUser = (await UserManager.GetUserByEmail(email)).NotNull();
+        _splitterUser = await UserManager.GetUserByEmail(email);
     }
 
     readonly BottleSplitFluentValidator _modelValidator = new ();
@@ -59,7 +58,7 @@
 
         if (_form.IsValid)
         {
-            _model.Owner = _splitterUser;
+            _model.Owner = _splitterUser.NotNull();
             await SplitManager.CreateSplit(_model);
         }
     }
