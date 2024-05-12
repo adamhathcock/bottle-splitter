@@ -21,9 +21,6 @@ var builder = WebApplication.CreateSlimBuilder(args);
 builder.WebHost.ConfigureAppConfiguration(
     (ctx, c) =>
     {
-        Console.WriteLine(ctx.HostingEnvironment.WebRootPath);
-        Console.WriteLine(ctx.HostingEnvironment.ContentRootPath);
-        ctx.HostingEnvironment.WebRootPath = "./wwwroot";
         StaticWebAssetsLoader.UseStaticWebAssets(ctx.HostingEnvironment, ctx.Configuration);
     }
 );
