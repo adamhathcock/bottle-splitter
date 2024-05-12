@@ -11,24 +11,21 @@
 
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        My Application
-        <MudSwitch ValueChanged="Callback" Value="@PreferencesService.DarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
-    </MudAppBar>
-    <MudDrawer Open="@_drawerOpen">
-        <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-             @if (_authenticated)
+        <MudMenu Icon="@Icons.Material.Filled.Menu">
+            <MudMenuItem  Href="/">Home</MudMenuItem>
+            @if (_authenticated)
             {
-                <MudNavLink Href="/account" Match="NavLinkMatch.Prefix">Account</MudNavLink>
-                <MudNavLink Href="/logout" Match="NavLinkMatch.Prefix">Logout</MudNavLink>
+                <MudMenuItem  Href="/account">Account</MudMenuItem>
+                <MudMenuItem  Href="/logout">Logout</MudMenuItem>
             }
             else
             {
-                <MudNavLink Href="/challenge/github" Match="NavLinkMatch.Prefix">Login via Github</MudNavLink>
+                <MudMenuItem Href="/challenge/github">Login via Github</MudMenuItem>
             }
-        </MudNavMenu>
-    </MudDrawer>
+        </MudMenu>
+        Bottle Splitter!
+        <MudSwitch ValueChanged="Callback" Value="@PreferencesService.DarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
+    </MudAppBar>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Medium">
             @Body
@@ -38,13 +35,7 @@
 
 @code {
     private MudTheme _theme = new();
-    bool _drawerOpen = true;
     private bool _authenticated;
-
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
 
     protected override async Task OnInitializedAsync()
     {
