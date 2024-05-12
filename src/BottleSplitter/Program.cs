@@ -29,10 +29,13 @@ builder.Configuration.AddEnvFile();
 // Add the database (in memory for the sample)
 builder.Services.AddPooledDbContextFactory<SplitterDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration["CONNECTION_STRING"], b =>
-    {
-        b.EnableRetryOnFailure(2).MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-    });
+    options.UseNpgsql(
+        builder.Configuration["CONNECTION_STRING"],
+        b =>
+        {
+            b.EnableRetryOnFailure(2).MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+        }
+    );
     //For debugging only: options.EnableDetailedErrors(true);
     //For debugging only: options.EnableSensitiveDataLogging(true);
 });

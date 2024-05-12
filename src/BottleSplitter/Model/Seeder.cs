@@ -12,7 +12,9 @@ public static class Seeder
     public static async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
-        var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<SplitterDbContext>>();
+        var factory = scope.ServiceProvider.GetRequiredService<
+            IDbContextFactory<SplitterDbContext>
+        >();
         await using var context = await factory.CreateDbContextAsync();
         var migrations = (await context.Database.GetPendingMigrationsAsync()).ToList();
         if (migrations.Any())
