@@ -22,11 +22,11 @@ public static class UserExtensions
     public static string? GetNameIdentifier(this ClaimsPrincipal user) =>
         user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-    public static string? GetClaim(this ClaimsIdentity user, string name) =>
-        user.Claims.FirstOrDefault(x => x.Value == name)?.Value;
+    public static string? GetClaim(this ClaimsIdentity user, string type) =>
+        user.Claims.FirstOrDefault(x => x.Type == type)?.Value;
 
-    public static string GetClaim(this ClaimsPrincipal user, string name) =>
-        (user.Claims.FirstOrDefault(x => x.Value == name)?.Value).NotNull();
+    public static string GetClaim(this ClaimsPrincipal user, string type) =>
+        (user.Claims.FirstOrDefault(x => x.Type == type)?.Value).NotNull();
 
     public static ClaimsIdentity SetClaim(this ClaimsIdentity user, string name, string value)
     {
@@ -35,6 +35,9 @@ public static class UserExtensions
     }
 
     public static string? GetEmail(this ClaimsIdentity user) => user.GetClaim(ClaimTypes.Email);
+
+    public static void SetEmail(this ClaimsIdentity user, string val) =>
+        user.SetClaim(ClaimTypes.Email, val);
 
     public static string? GetAccessToken(this ClaimsIdentity user) => user.GetClaim(AccessToken);
 

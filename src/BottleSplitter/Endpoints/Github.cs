@@ -56,17 +56,14 @@ public static class Github
                     var client = new GitHubClient(new ProductHeaderValue(Consts.ClientId));
                     client.Credentials = new Credentials(context.AccessToken);
                     var emails = await client.User.Email.GetAll();
-                    context.Identity.SetClaim(ClaimTypes.Email, emails.First().Email);
+                    context.Identity.SetEmail(emails.First().Email);
                 }
 
+                var email = context.Identity.GetEmail().NotNull();
                 await context
                     .HttpContext.RequestServices.GetRequiredService<IUserManager>()
                     .SaveIfNotFound(
-                        new SplitterUser()
-                        {
-                            Email = context.Identity.GetEmail().NotNull(),
-                            Source = UserSource.Github
-                        }
+                        new SplitterUser() { Email = email, Source = UserSource.Github }
                     );
             };
         });

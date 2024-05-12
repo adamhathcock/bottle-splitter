@@ -74,7 +74,7 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
     sp.GetRequiredService<CustomAuthenticationStateProvider>()
 );
 builder.Services.AddScoped<IPreferencesService, PreferencesService>();
-builder.Services.AddScoped<ISessionManager, SessionManager>();
+builder.Services.Scan(x => x.FromEntryAssembly().AddClasses().AsMatchingInterface());
 
 builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
 

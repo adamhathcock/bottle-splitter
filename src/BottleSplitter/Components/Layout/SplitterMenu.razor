@@ -1,0 +1,36 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using BottleSplitter.Infrastructure
+
+@inject NavigationManager NavigationManager
+
+<MudMenu Icon="@Icons.Material.Filled.Menu">
+    <MudMenuItem  Href="/">Home</MudMenuItem>
+    @if (_authenticated)
+    {
+        <MudMenuItem Href="/account">Account</MudMenuItem>
+        <MudMenuItem Href="/logout">Logout</MudMenuItem>
+    }
+    else
+    {
+        <MudMenuItem OnClick="GitHubLogin">Login via Github</MudMenuItem>
+    }
+</MudMenu>
+
+@code {
+    private MudTheme _theme = new();
+    private bool _authenticated;
+    [Inject]
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _authenticated = (await CustomAuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity?.IsAuthenticated ?? false;
+    }
+
+    private void GitHubLogin()
+    {
+        NavigationManager.NavigateTo("/challenge/github", true);
+    }
+
+}

@@ -12,6 +12,7 @@
     <PackageReference Include="Narochno.Primitives"  />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"  />
     <PackageReference Include="Octokit" />
+    <PackageReference Include="Scrutor" />
     <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
 
