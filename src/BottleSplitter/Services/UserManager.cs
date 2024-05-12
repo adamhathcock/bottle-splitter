@@ -20,6 +20,7 @@ public class UserManager(IDbContextFactory<SplitterDbContext> dbContextFactory) 
         if (existingUser is null)
         {
             context.Users.Add(splitterUser);
+            await context.SaveChangesAsync();
         }
     }
 }
