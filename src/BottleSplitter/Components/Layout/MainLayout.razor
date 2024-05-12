@@ -1,8 +1,10 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using BottleSplitter.Infrastructure
+@using BottleSplitter.Services
 @inherits LayoutComponentBase
+@inject IPreferencesService PreferencesService
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudThemeProvider @bind-IsDarkMode="@PreferencesService.DarkMode" Theme="_theme"/>
 
 <MudDialogProvider/>
 <MudSnackbarProvider/>
@@ -11,7 +13,7 @@
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         My Application
-        <MudSwitch @bind-Value="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
+        <MudSwitch ValueChanged="Callback" Value="@PreferencesService.DarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
     </MudAppBar>
     <MudDrawer Open="@_drawerOpen">
         <MudNavMenu>
@@ -36,7 +38,6 @@
 
 @code {
     private MudTheme _theme = new();
-    private bool _isDarkMode;
     bool _drawerOpen = true;
     private bool _authenticated;
 
@@ -48,9 +49,17 @@
     protected override async Task OnInitializedAsync()
     {
         _authenticated = (await CustomAuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity?.IsAuthenticated ?? false;
+        await PreferencesService.Load();
     }
 
     [Inject]
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+
+    private async Task Callback(bool val)
+    {
+        PreferencesService.DarkMode = val;
+        await PreferencesService.Save();
+    }
+
 }

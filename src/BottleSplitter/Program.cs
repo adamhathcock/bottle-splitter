@@ -3,6 +3,7 @@ using BottleSplitter.Components;
 using BottleSplitter.Endpoints;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
+using BottleSplitter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
@@ -67,6 +68,8 @@ builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
     sp.GetRequiredService<CustomAuthenticationStateProvider>()
 );
+builder.Services.AddScoped<IPreferencesService, PreferencesService>();
+
 builder.Services.AddScoped<ISessionManager, SessionManager>();
 builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
 var app = builder.Build();
