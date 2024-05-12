@@ -3,6 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
 using BottleSplitter.Infrastructure;
+using BottleSplitter.Model;
+using BottleSplitter.Services;
 using BottleSplitter.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -56,6 +58,16 @@ public static class Github
                     var emails = await client.User.Email.GetAll();
                     context.Identity.SetClaim(ClaimTypes.Email, emails.First().Email);
                 }
+
+                await context
+                    .HttpContext.RequestServices.GetRequiredService<IUserManager>()
+                    .SaveIfNotFound(
+                        new SplitterUser()
+                        {
+                            Email = context.Identity.GetEmail().NotNull(),
+                            Source = UserSource.Github
+                        }
+                    );
             };
         });
 }

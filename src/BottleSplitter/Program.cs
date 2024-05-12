@@ -75,11 +75,12 @@ builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserC
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-    await using var scope = app.Services.CreateAsyncScope();
-    await Seeder.InitializeAsync(scope.ServiceProvider);
+app.UseExceptionHandler("/Error", createScopeForErrors: true);
+
+// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+app.UseHsts();
+await using var scope = app.Services.CreateAsyncScope();
+await Seeder.InitializeAsync(scope.ServiceProvider);
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
