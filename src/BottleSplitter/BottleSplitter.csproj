@@ -3,11 +3,17 @@
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.GitHub" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
     <PackageReference Include="MudBlazor"  />
     <PackageReference Include="Narochno.EnvFile"  />
     <PackageReference Include="Narochno.Primitives"  />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"  />
     <PackageReference Include="Octokit" />
     <PackageReference Include="Serilog.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update=".env">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

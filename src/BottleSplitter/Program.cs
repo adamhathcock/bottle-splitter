@@ -28,9 +28,9 @@ builder.WebHost.ConfigureAppConfiguration(
 builder.Configuration.AddEnvFile();
 
 // Add the database (in memory for the sample)
-builder.Services.AddDbContext<SplitterDbContext>(options =>
+builder.Services.AddDbContextFactory<SplitterDbContext>(options =>
 {
-    options.UseSqlite("Data Source=local.db");
+    options.UseNpgsql(builder.Configuration["CONNECTION_STRING"]);
     //For debugging only: options.EnableDetailedErrors(true);
     //For debugging only: options.EnableSensitiveDataLogging(true);
 });
@@ -75,17 +75,11 @@ builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserC
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-}
-else
-{
     await using var scope = app.Services.CreateAsyncScope();
     await Seeder.InitializeAsync(scope.ServiceProvider);
-}
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
