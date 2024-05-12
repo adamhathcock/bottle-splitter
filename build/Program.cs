@@ -10,6 +10,7 @@ const string Restore = "restore";
 const string Build = "build";
 const string Test = "test";
 const string Format = "format";
+const string Publish = "publish";
 
 Target(
     Clean,
@@ -52,22 +53,7 @@ Target(
     DependsOn(Restore),
     () =>
     {
-        Run(
-            "dotnet",
-            "build src/BottleSplitter/BottleSplitter.csproj -c Release --no-restore --output ./output"
-        );
-        var baseDir = "./output/wwwroot";
-        foreach (var file in Glob.Files("src/BottleSplitter/wwwroot", "**"))
-        {
-            Console.WriteLine($"Copying '{file}'");
-            var newPath = Path.Combine(baseDir, file);
-            var dir = Path.GetDirectoryName(newPath) ?? throw new InvalidOperationException();
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-            File.Copy(Path.Combine("src", "BottleSplitter", "wwwroot", file), newPath, true);
-        }
+        Run("dotnet", "build src/BottleSplitter/BottleSplitter.csproj -c Release --no-restore");
     }
 );
 
@@ -88,6 +74,18 @@ Target(
     }
 );
 
-Target("default", DependsOn(Test), () => Console.WriteLine("Done!"));
+Target(
+    Publish,
+    DependsOn(Test),
+    () =>
+    {
+        Run(
+            "dotnet",
+            "publish src/BottleSplitter/BottleSplitter.csproj -c Release --no-restore --no-build -o output/"
+        );
+    }
+);
+
+Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
 
 await RunTargetsAndExitAsync(args);
