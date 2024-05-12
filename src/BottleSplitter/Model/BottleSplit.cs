@@ -6,7 +6,7 @@ namespace BottleSplitter.Model;
 public class BottleSplit : Auditable
 {
     [Required]
-    public string Name { get; set; }= string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public SplitterUser Owner { get; set; } = default!;
@@ -14,7 +14,6 @@ public class BottleSplit : Auditable
     public string? Description { get; set; }
     public string? DetailsUrl { get; set; }
     public string? ImageUrl { get; set; }
-
 
     public int? TotalAvailable { get; set; } //milliliters
 }

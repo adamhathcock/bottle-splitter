@@ -26,8 +26,6 @@ public class UserManager(IDbContextFactory<SplitterDbContext> dbContextFactory) 
     public async ValueTask<SplitterUser?> GetUserByEmail(string email)
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
-        return await context.Users.FirstOrDefaultAsync(x =>
-            x.Email == email
-        );
+        return await context.Users.FirstOrDefaultAsync(x => x.Email == email);
     }
 }

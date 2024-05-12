@@ -8,6 +8,7 @@ public interface ISplitManager
 {
     ValueTask CreateSplit(BottleSplit split);
 }
+
 public class SplitManager(IDbContextFactory<SplitterDbContext> dbContextFactory) : ISplitManager
 {
     public async ValueTask CreateSplit(BottleSplit split)
