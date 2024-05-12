@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -16,8 +17,13 @@ using Narochno.EnvFile;
 using Serilog;
 using Serilog.Events;
 
-var builder = WebApplication.CreateBuilder(args);
-
+var builder = WebApplication.CreateSlimBuilder(args);
+builder.WebHost.ConfigureAppConfiguration(
+    (ctx, c) =>
+    {
+        StaticWebAssetsLoader.UseStaticWebAssets(ctx.HostingEnvironment, ctx.Configuration);
+    }
+);
 builder.Configuration.AddEnvFile();
 
 // Add the database (in memory for the sample)
@@ -63,7 +69,6 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
 );
 builder.Services.AddScoped<ISessionManager, SessionManager>();
 builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
