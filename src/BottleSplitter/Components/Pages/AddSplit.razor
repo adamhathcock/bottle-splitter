@@ -1,14 +1,91 @@
-﻿@page "/"
+﻿@page "/add-split"
+@attribute [Authorize]
+@inject IUserManager UserManager;
+@inject ISplitManager SplitManager;
+@using System.Diagnostics.CodeAnalysis
+@using BottleSplitter.Infrastructure
+@using BottleSplitter.Model
+@using BottleSplitter.Services
+@using FluentValidation
+@using Microsoft.AspNetCore.Authorization
+@using Narochno.Primitives
 
-<PageTitle>Bottle Splitter!</PageTitle>
+<PageTitle>Add a New Bottle Split</PageTitle>
+<MudText Typo="Typo.h6">Add a New Bottle Split with @_splitterUser.Email</MudText>
 
-<MudText Typo="Typo.h6">Bottle Splitter!</MudText>
+<DataAnnotationsValidator/>
 <MudCard>
-    <MudCardContent>
-        <MudText>Please login to Create a split or join one.</MudText>
-        <MudText Typo="Typo.body2">Go to github issues to request features.</MudText>
-    </MudCardContent>
-    <MudCardActions>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@Consts.GitHubHome">Learn More</MudButton>
-    </MudCardActions>
+    <MudForm Model="@_model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)" ValidationDelay="0">
+        <MudCardContent>
+            <MudTextField Label="Bottle Split name"
+                          @bind-Value="_model.Name" For="@(() => _model.Name)"/>
+            <MudTextField Label="Description" HelperText="Optional Description of the split" Class="mt-3"
+                          @bind-Value="_model.Description" For="@(() => _model.Description)"/>
+            <MudTextField Label="Password" HelperText="Optional Url (e.g. Whiskybase)" Class="mt-3"
+                          @bind-Value="_model.DetailsUrl" For="@(() => _model.DetailsUrl)" />
+            <MudTextField Label="Password" HelperText="Optional Image Url" Class="mt-3"
+                          @bind-Value="_model.ImageUrl" For="@(() => _model.ImageUrl)"/>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Order</MudButton>
+        </MudCardActions>
+    </MudForm>
+
 </MudCard>
+
+@code {
+    readonly BottleSplit _model = new ();
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    private SplitterUser _splitterUser = default!;
+
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    MudForm _form = default!;
+    [Inject]
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var email = state.User.GetEmail().NotNull();
+        _splitterUser = (await UserManager.GetUserByEmail(email)).NotNull();
+    }
+
+    readonly BottleSplitFluentValidator _modelValidator = new ();
+
+    private async Task Submit()
+    {
+        await _form.Validate();
+
+        if (_form.IsValid)
+        {
+            _model.Owner = _splitterUser;
+            await SplitManager.CreateSplit(_model);
+        }
+    }
+
+    public class BottleSplitFluentValidator : AbstractValidator<BottleSplit>
+    {
+        public BottleSplitFluentValidator()
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .Length(1,100);
+
+            RuleFor(x => x.DetailsUrl)
+                .Url();
+
+            RuleFor(x => x.ImageUrl)
+                .Url();
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<BottleSplit>.CreateWithOptions((BottleSplit)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+}

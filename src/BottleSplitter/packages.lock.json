@@ -8,6 +8,12 @@
         "resolved": "8.0.0",
         "contentHash": "FuxtaXIjpG9bWHhfkZKHJZtYHH58/uI+EvBEPiBhc176dFr+dknfpljWV5ou8c98mXN5XGkbe5nm1OKqiGRKlw=="
       },
+      "FluentValidation": {
+        "type": "Direct",
+        "requested": "[11.9.1, )",
+        "resolved": "11.9.1",
+        "contentHash": "C+PqISSMdlOZZJx0Hx25atW32tv4vbpsaiQB+PLjK+ZGLzOFuHl1fUJ3Lny77mIZ31ZtYtNG0JgUjxa3wwLsWg=="
+      },
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
         "type": "Direct",
         "requested": "[8.0.4, )",
