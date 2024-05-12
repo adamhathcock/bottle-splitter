@@ -5,7 +5,6 @@ using AspNet.Security.OAuth.GitHub;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
 using BottleSplitter.Services;
-using BottleSplitter.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

@@ -1,9 +1,14 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Authorization
-@attribute [AllowAnonymous]
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Bottle Splitter!</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<MudText Typo="Typo.h6">Bottle Splitter!</MudText>
+<MudCard>
+    <MudCardContent>
+        <MudText>Please login to Create a split or join one.</MudText>
+        <MudText Typo="Typo.body2">Go to github issues to request features.</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@Consts.GitHubHome">Learn More</MudButton>
+    </MudCardActions>
+</MudCard>

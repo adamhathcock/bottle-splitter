@@ -1,6 +1,7 @@
 ﻿@using BottleSplitter.Services
 @inherits LayoutComponentBase
 @inject IPreferencesService PreferencesService
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider @bind-IsDarkMode="@PreferencesService.DarkMode" Theme="_theme"/>
 
@@ -10,8 +11,10 @@
 <MudLayout>
     <MudAppBar>
         <SplitterMenu/>
-        Bottle Splitter!
+        <MudSpacer />
         <MudSwitch ValueChanged="Callback" Value="@PreferencesService.DarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" OnClick="Github" />
     </MudAppBar>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Medium">
@@ -33,6 +36,11 @@
     {
         PreferencesService.DarkMode = val;
         await PreferencesService.Save();
+    }
+
+    private void Github()
+    {
+        NavigationManager.NavigateTo(Consts.GitHubHome, true);
     }
 
 }
