@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace BottleSplitter.Model;
 
-public class BottleSplit
+public class BottleSplit : Auditable
 {
-    public Guid Id { get; set; } = Guid.Empty;
     public string Name { get; set; }= string.Empty;
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public SplitterUser Owner { get; set; } = default!;
