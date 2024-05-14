@@ -1,0 +1,42 @@
+﻿@page "/my-splits"
+@attribute [Authorize]
+@inject IUserManager UserManager;
+@inject ISplitManager SplitManager;
+@using System.Diagnostics.CodeAnalysis
+@using BottleSplitter.Infrastructure
+@using BottleSplitter.Model
+@using BottleSplitter.Services
+@using Microsoft.AspNetCore.Authorization
+@using Narochno.Primitives
+
+<PageTitle>My Splits</PageTitle>
+<MudText Typo="Typo.h6">Active Splits</MudText>
+
+@foreach (var split in _model)
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText Typo="Typo.body1">@split.Name</MudText>
+            <MudText Typo="Typo.body1">@split.Description</MudText>
+            <MudText Typo="Typo.body1">@split.DetailsUrl</MudText>
+            <MudText Typo="Typo.body1">@split.ImageUrl</MudText>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    List<BottleSplit> _model = new ();
+
+    private SplitterUser? _splitterUser;
+    [Inject]
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var email = state.User.GetEmail().NotNull();
+        _splitterUser = await UserManager.GetUserByEmail(email);
+        _model = await SplitManager.GetSplits(_splitterUser.NotNull().Id);
+    }
+}

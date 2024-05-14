@@ -1,8 +1,8 @@
 ﻿@page "/add-split"
 @attribute [Authorize]
-@inject IUserManager UserManager;
 @inject ISplitManager SplitManager;
 @using System.Diagnostics.CodeAnalysis
+@using System.Security.Claims
 @using BottleSplitter.Infrastructure
 @using BottleSplitter.Model
 @using BottleSplitter.Services
@@ -11,7 +11,7 @@
 @using Narochno.Primitives
 
 <PageTitle>Add a New Bottle Split</PageTitle>
-<MudText Typo="Typo.h6">Add a New Bottle Split with @_splitterUser?.Email</MudText>
+<MudText Typo="Typo.h6">Add a New Bottle Split with @_splitterUser?.GetEmail()</MudText>
 
 <MudCard>
     <MudForm Model="@_model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)" ValidationDelay="0">
@@ -26,7 +26,7 @@
                           @bind-Value="_model.ImageUrl" For="@(() => _model.ImageUrl)"/>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Order</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
         </MudCardActions>
     </MudForm>
 
@@ -35,7 +35,7 @@
 @code {
     readonly BottleSplit _model = new ();
 
-    private SplitterUser? _splitterUser;
+    private ClaimsPrincipal? _splitterUser;
 
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     MudForm _form = default!;
@@ -46,8 +46,7 @@
     protected override async Task OnInitializedAsync()
     {
         var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
-        var email = state.User.GetEmail().NotNull();
-        _splitterUser = await UserManager.GetUserByEmail(email);
+        _splitterUser = state.User;
     }
 
     readonly BottleSplitFluentValidator _modelValidator = new ();
@@ -58,8 +57,7 @@
 
         if (_form.IsValid)
         {
-            _model.Owner = _splitterUser.NotNull();
-            await SplitManager.CreateSplit(_model);
+            await SplitManager.CreateSplit((_splitterUser?.GetId()).NotNull(), _model);
         }
     }
 

@@ -13,11 +13,13 @@ public static class Authentication
         services
             .AddAuthentication(o =>
             {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddCookie(o =>
             {
+                o.LoginPath = "/";
                 o.LogoutPath = "/signout";
             })
             .AddGithub(configuration);

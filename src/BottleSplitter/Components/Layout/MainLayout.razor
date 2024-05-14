@@ -1,7 +1,10 @@
-﻿@using BottleSplitter.Services
+@using System.Security.Claims
+@using BottleSplitter.Infrastructure
+@using BottleSplitter.Services
 @inherits LayoutComponentBase
 @inject IPreferencesService PreferencesService
 @inject NavigationManager NavigationManager
+@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
 
 <MudThemeProvider @bind-IsDarkMode="@PreferencesService.DarkMode" Theme="_theme"/>
 
@@ -11,6 +14,15 @@
 <MudLayout>
     <MudAppBar>
         <SplitterMenu/>
+        <MudSpacer />
+        @if (_currentUser is not null)
+        {
+            <MudText Typo="Typo.body1">Welcome @_currentUser.GetEmail()</MudText>
+        }
+        else
+        {
+            <MudText Typo="Typo.body1">Please login to continue.</MudText>
+        }
         <MudSpacer />
         <MudSwitch ValueChanged="Callback" Value="@PreferencesService.DarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
         <MudSpacer />
@@ -26,8 +38,15 @@
 @code {
     private MudTheme _theme = new();
 
+    private ClaimsPrincipal? _currentUser;
+
     protected override async Task OnInitializedAsync()
     {
+        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (state.User.Identity?.IsAuthenticated ?? false)
+        {
+            _currentUser = state.User;
+        }
         await PreferencesService.Load();
     }
 

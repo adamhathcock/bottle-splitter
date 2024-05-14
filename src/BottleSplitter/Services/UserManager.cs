@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BottleSplitter.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +7,13 @@ namespace BottleSplitter.Services;
 
 public interface IUserManager
 {
-    ValueTask SaveIfNotFound(SplitterUser splitterUser);
+    ValueTask<Guid> SaveIfNotFound(SplitterUser splitterUser);
     ValueTask<SplitterUser?> GetUserByEmail(string email);
 }
 
 public class UserManager(IDbContextFactory<SplitterDbContext> dbContextFactory) : IUserManager
 {
-    public async ValueTask SaveIfNotFound(SplitterUser splitterUser)
+    public async ValueTask<Guid> SaveIfNotFound(SplitterUser splitterUser)
     {
         var existingUser = await GetUserByEmail(splitterUser.Email);
         if (existingUser is null)
@@ -20,7 +21,9 @@ public class UserManager(IDbContextFactory<SplitterDbContext> dbContextFactory) 
             await using var context = await dbContextFactory.CreateDbContextAsync();
             context.Users.Add(splitterUser);
             await context.SaveChangesAsync();
+            existingUser = splitterUser;
         }
+        return existingUser.Id;
     }
 
     public async ValueTask<SplitterUser?> GetUserByEmail(string email)

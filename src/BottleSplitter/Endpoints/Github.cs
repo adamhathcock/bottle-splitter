@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Security.Claims;
 using AspNet.Security.OAuth.GitHub;
 using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
@@ -59,11 +58,12 @@ public static class Github
                 }
 
                 var email = context.Identity.GetEmail().NotNull();
-                await context
+                var id = await context
                     .HttpContext.RequestServices.GetRequiredService<IUserManager>()
                     .SaveIfNotFound(
                         new SplitterUser() { Email = email, Source = UserSource.Github }
                     );
+                context.Identity.SetId(id);
             };
         });
 }

@@ -12,6 +12,7 @@ namespace BottleSplitter.Infrastructure;
 public static class UserExtensions
 {
     public const string AccessToken = "access_token";
+    public const string Id = "split_id";
 
     public static string? GetEmail(this ClaimsPrincipal user) =>
         user.FindFirstValue(ClaimTypes.Email);
@@ -21,6 +22,17 @@ public static class UserExtensions
 
     public static string? GetNameIdentifier(this ClaimsPrincipal user) =>
         user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    public static Guid? GetId(this ClaimsPrincipal user)
+    {
+        var s = user.FindFirstValue(Id);
+        if (s is null)
+        {
+            return null;
+        }
+
+        return Guid.Parse(s);
+    }
 
     public static string? GetClaim(this ClaimsIdentity user, string type) =>
         user.Claims.FirstOrDefault(x => x.Type == type)?.Value;
@@ -38,6 +50,8 @@ public static class UserExtensions
 
     public static void SetEmail(this ClaimsIdentity user, string val) =>
         user.SetClaim(ClaimTypes.Email, val);
+
+    public static void SetId(this ClaimsIdentity user, Guid id) => user.SetClaim(Id, id.ToString());
 
     public static string? GetAccessToken(this ClaimsIdentity user) => user.GetClaim(AccessToken);
 

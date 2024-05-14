@@ -1,4 +1,8 @@
 ﻿@page "/logout"
+@using System.Security.Claims
+@using BottleSplitter.Infrastructure
+@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <PageTitle>Logout</PageTitle>
 
@@ -12,3 +16,14 @@
         <MudAlert Severity="Severity.Success">You're logged out. <MudLink Href="/login">Log in.</MudLink></MudAlert>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        CustomAuthenticationStateProvider.SetAuthenticationState(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
+
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        NavigationManager.NavigateTo("/signout", true);
+    }
+
+}
