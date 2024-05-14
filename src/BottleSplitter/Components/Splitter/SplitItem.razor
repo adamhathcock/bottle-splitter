@@ -1,0 +1,13 @@
+﻿
+<MudStack Row="true" Class="pa-1">
+    <MudText Class="pa-1">@Name</MudText>
+    <MudDivider Vertical="true"/>
+    <MudText Class="pa-1">@(Value ?? "<No Value>")</MudText>
+</MudStack>
+
+@code {
+
+    [Parameter] [EditorRequired] public string Name { get; set; } = string.Empty;
+    [Parameter] [EditorRequired] public string? Value { get; set; }
+
+}

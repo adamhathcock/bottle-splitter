@@ -10,16 +10,16 @@
 @using Narochno.Primitives
 
 <PageTitle>My Splits</PageTitle>
-<MudText Typo="Typo.h6">Active Splits</MudText>
+<MudText Typo="Typo.h2" Class="pa-4">Active Splits</MudText>
 
 @foreach (var split in _model)
 {
     <MudCard>
         <MudCardContent>
-            <MudText Typo="Typo.body1">@split.Name</MudText>
-            <MudText Typo="Typo.body1">@split.Description</MudText>
-            <MudText Typo="Typo.body1">@split.DetailsUrl</MudText>
-            <MudText Typo="Typo.body1">@split.ImageUrl</MudText>
+            <SplitItem Name="Name" Value="@split.Name"/>
+            <SplitItem Name="Description" Value="@split.Description"/>
+            <SplitItem Name="Link" Value="@split.DetailsUrl"/>
+            <SplitItem Name="Image" Value="@split.ImageUrl"/>
         </MudCardContent>
     </MudCard>
 }
