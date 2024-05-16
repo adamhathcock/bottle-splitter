@@ -1,0 +1,29 @@
+﻿@page "/splits/{Squid}"
+@using BottleSplitter.Model
+@using BottleSplitter.Services
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@inject ISplitManager SplitManager;
+
+@if (Split is not null)
+{
+    <SplitItem Split="@Split"/>
+}
+
+@code {
+    [Parameter]
+    public string? Squid { get; set; }
+
+    private BottleSplit? Split { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Squid is null)
+        {
+            return;
+        }
+        Split = await SplitManager.GetSplitBySquid(Squid);
+    }
+
+}

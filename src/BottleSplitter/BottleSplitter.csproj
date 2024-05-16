@@ -15,6 +15,7 @@
     <PackageReference Include="Octokit" />
     <PackageReference Include="Scrutor" />
     <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Sqids" />
   </ItemGroup>
 
   <ItemGroup>

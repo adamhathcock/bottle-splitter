@@ -12,9 +12,13 @@ public interface ISplitManager
 {
     ValueTask<List<BottleSplit>> GetSplits(Guid userId);
     ValueTask CreateSplit(Guid currentUserId, BottleSplit split);
+    ValueTask<BottleSplit?> GetSplitBySquid(string splitId);
 }
 
-public class SplitManager(IDbContextFactory<SplitterDbContext> dbContextFactory) : ISplitManager
+public class SplitManager(
+    IDbContextFactory<SplitterDbContext> dbContextFactory,
+    ISquidGenerator squidGenerator
+) : ISplitManager
 {
     public async ValueTask<List<BottleSplit>> GetSplits(Guid userId)
     {
@@ -26,8 +30,17 @@ public class SplitManager(IDbContextFactory<SplitterDbContext> dbContextFactory)
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
         var user = await context.Users.FindAsync(currentUserId).NotNull();
+        var id = Guid.NewGuid();
+        split.Id = id;
         split.Owner = user;
+        split.Squid = squidGenerator.GetSquid();
         context.Splits.Add(split);
         await context.SaveChangesAsync();
+    }
+
+    public async ValueTask<BottleSplit?> GetSplitBySquid(string squid)
+    {
+        await using var context = await dbContextFactory.CreateDbContextAsync();
+        return await context.Splits.FirstOrDefaultAsync(x => x.Squid == squid);
     }
 }

@@ -14,14 +14,7 @@
 
 @foreach (var split in _model)
 {
-    <MudCard>
-        <MudCardContent>
-            <SplitItem Name="Name" Value="@split.Name"/>
-            <SplitItem Name="Description" Value="@split.Description"/>
-            <SplitItem Name="Link" Value="@split.DetailsUrl"/>
-            <SplitItem Name="Image" Value="@split.ImageUrl"/>
-        </MudCardContent>
-    </MudCard>
+    <SplitItem Split="split"/>
 }
 
 @code {

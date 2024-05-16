@@ -78,7 +78,8 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
 builder.Services.AddScoped<IPreferencesService, PreferencesService>();
 builder.Services.Scan(x => x.FromEntryAssembly().AddClasses().AsMatchingInterface());
 
-builder.Services.TryAddEnumerable(ServiceDescriptor.Scoped<CircuitHandler, UserCircuitHandler>());
+builder.Services.AddScoped<CircuitHandler, UserCircuitHandler>();
+builder.Services.AddScoped<ISquidGenerator, SquidGenerator>();
 
 var app = builder.Build();
 await Seeder.InitializeAsync(app.Services);

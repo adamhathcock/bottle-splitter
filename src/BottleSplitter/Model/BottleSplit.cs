@@ -15,5 +15,8 @@ public class BottleSplit : Auditable
     public string? DetailsUrl { get; set; }
     public string? ImageUrl { get; set; }
 
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public string Squid { get; set; } = default!;
+
     public int? TotalAvailable { get; set; } //milliliters
 }

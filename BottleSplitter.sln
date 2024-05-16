@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{ED5BB2
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
 		NuGet.config = NuGet.config
+		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{4BC5D7E2-F3BF-40AE-8075-DEC2563FE000}"
