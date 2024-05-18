@@ -2,6 +2,8 @@
 @attribute [Authorize]
 @inject ISplitManager SplitManager;
 @inject INavigationService NavigationService
+@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider;
+
 @using System.Diagnostics.CodeAnalysis
 @using System.Security.Claims
 @using BottleSplitter.Infrastructure
@@ -12,53 +14,56 @@
 @using Narochno.Primitives
 
 <PageTitle>Add a New Bottle Split</PageTitle>
-<MudText Typo="Typo.h6">Add a New Bottle Split with @_splitterUser?.GetEmail()</MudText>
 
 <MudCard>
-    <MudForm Model="@_model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)" ValidationDelay="0">
-        <MudCardContent>
-            <MudTextField Label="Bottle Split name"
-                          @bind-Value="_model.Name" For="@(() => _model.Name)"/>
-            <MudDivider/>
-            <MudTextField Label="Description" HelperText="Optional Description of the split" Class="mt-3"
-                          @bind-Value="_model.Settings.Description" For="@(() => _model.Settings.Description)"/>
-            <MudTextField Label="Details Url" HelperText="Optional Url that describes the bottle (e.g. Whiskybase)" Class="mt-3"
-                          @bind-Value="_model.Settings.DetailsUrl" For="@(() => _model.Settings.DetailsUrl)" />
-            <MudTextField Label="Image Url" HelperText="Optional" Class="mt-3"
-                          @bind-Value="_model.Settings.ImageUrl" For="@(() => _model.Settings.ImageUrl)"/>
-            <MudDivider/>
-            <MudNumericField Label="Total Available" HelperText="Milliliters" Class="mt-3"
-                             @bind-Value="_model.Settings.TotalAvailable" For="@(() => _model.Settings.TotalAvailable)"/>
-            <MudChipSet AllClosable="true" OnClose="Closed">
-                @foreach (var value in _model.Settings.Sizes)
-                {
-                <MudChip Text="@(value + " (ml)")"></MudChip>
-                }
-            </MudChipSet>
-
-            <MudText>Add Size</MudText>
-
-            <MudNumericField T="int" Label="Size to add" HelperText="Milliliters" Class="mt-3"/>
-            <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="Add"></MudIconButton>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_disabled" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
-        </MudCardActions>
-    </MudForm>
-
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add a New Bottle Split</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudForm Model="@_model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)" ValidationDelay="0">
+            <MudStack>
+                <MudTextField Label="Bottle Split name"
+                              @bind-Value="_model.Name" For="@(() => _model.Name)"/>
+                <MudSpacer />
+                <MudTextField Label="Description" HelperText="Optional Description of the split" Class="mt-3"
+                              @bind-Value="_model.Settings.Description" For="@(() => _model.Settings.Description)"/>
+                <MudTextField Label="Details Url" HelperText="Optional Url that describes the bottle (e.g. Whiskybase)" Class="mt-3"
+                              @bind-Value="_model.Settings.DetailsUrl" For="@(() => _model.Settings.DetailsUrl)"/>
+                <MudTextField Label="Image Url" HelperText="Optional" Class="mt-3"
+                              @bind-Value="_model.Settings.ImageUrl" For="@(() => _model.Settings.ImageUrl)"/>
+                <MudSpacer />
+                <MudText>Split Sizes</MudText>
+                <MudNumericField Label="Total Available" HelperText="Milliliters" Class="mt-3"
+                                 @bind-Value="_model.Settings.TotalAvailable" For="@(() => _model.Settings.TotalAvailable)"/>
+                <MudChipSet AllClosable="true" OnClose="Closed">
+                    @foreach (var value in _model.Settings.Sizes)
+                    {
+                        <MudChip Text="@(value + " (ml)")"></MudChip>
+                    }
+                </MudChipSet>
+                <MudStack Row="true">
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="Add"></MudIconButton>
+                    <MudNumericField @ref="_numericField" T="int" Label="Size to add" HelperText="Milliliters" Class="mt-3"/>
+                </MudStack>
+            </MudStack>
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_disabled" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
+    </MudCardActions>
 </MudCard>
 
 @code {
     private readonly BottleSplit _model = new ();
     private bool _disabled;
-
     private ClaimsPrincipal? _splitterUser;
 
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    MudForm _form = default!;
-    [Inject]
+    private MudNumericField<int> _numericField = default!;
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+    MudForm _form = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,7 +73,14 @@
 
     readonly BottleSplitFluentValidator _modelValidator = new ();
 
-    public void Add() => _model.Settings.Sizes.Add(100);
+    public void Add()
+    {
+        if (!_model.Settings.Sizes.Contains(_numericField.Value))
+        {
+            _model.Settings.Sizes.Add(_numericField.Value);
+        }
+    }
+
     public void Closed(MudChip chip) => _model.Settings.Sizes.Remove(int.Parse(chip.Text.Split(" ")[0]));
 
     private async Task Submit()
@@ -79,7 +91,7 @@
         {
             _disabled = true;
             await SplitManager.CreateSplit((_splitterUser?.GetId()).NotNull(), _model);
-            NavigationService.GoToIndex();
+            NavigationService.GoToSplits();
         }
     }
 
