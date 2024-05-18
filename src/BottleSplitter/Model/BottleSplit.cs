@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BottleSplitter.Model;
@@ -11,12 +13,19 @@ public class BottleSplit : Auditable
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public SplitterUser Owner { get; set; } = default!;
 
-    public string? Description { get; set; }
-    public string? DetailsUrl { get; set; }
-    public string? ImageUrl { get; set; }
-
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public string Squid { get; set; } = default!;
 
-    public int? TotalAvailable { get; set; } //milliliters
+    public SplitSettings Settings { get; set; } = new ();
+}
+
+public class SplitSettings
+{
+    public int? TotalAvailable { get; set; } = 700;//milliliters
+
+    public List<int> Sizes { get; set; } = [50, 100];
+
+    public string? Description { get; set; }
+    public string? DetailsUrl { get; set; }
+    public string? ImageUrl { get; set; }
 }

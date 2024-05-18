@@ -14,9 +14,15 @@
             <MudDivider Vertical="true"/>
             <MudLink Class="pa-1" Href="@($"/splits/{Split.Squid}")">@Split.Squid</MudLink>
         </MudStack>
-        <SplitItemLine Name="Description:" Value="@Split.Description"/>
-        <SplitItemLine Name="Link:" Value="@Split.DetailsUrl"/>
-        <SplitItemLine Name="Imag:e" Value="@Split.ImageUrl"/>
+        <SplitItemLine Name="Description:" Value="@Split.Settings.Description"/>
+        <SplitItemLine Name="Link:" Value="@Split.Settings.DetailsUrl"/>
+        <SplitItemLine Name="Image:" Value="@Split.Settings.ImageUrl"/>
+
+        <SplitItemLine Name="Total Available:" Value="@((Split.Settings.TotalAvailable ?? 0).ToString())"/>
+        @foreach (var size in Split.Settings.Sizes)
+        {
+            <MudChip Color="Color.Primary">@size</MudChip>
+        }
     </MudCardContent>
 </MudCard>
 
