@@ -3,7 +3,7 @@
 @using BottleSplitter.Services
 @inherits LayoutComponentBase
 @inject IPreferencesService PreferencesService
-@inject NavigationManager NavigationManager
+@inject INavigationService NavigationService
 @inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
 
 <MudThemeProvider @bind-IsDarkMode="@PreferencesService.DarkMode" Theme="_theme"/>
@@ -59,7 +59,7 @@
 
     private void Github()
     {
-        NavigationManager.NavigateTo(Consts.GitHubHome, true);
+        NavigationService.GoTo(Consts.GitHubHome, true);
     }
 
 }

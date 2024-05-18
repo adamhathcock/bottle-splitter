@@ -1,8 +1,9 @@
 ﻿@page "/logout"
 @using System.Security.Claims
 @using BottleSplitter.Infrastructure
+@using BottleSplitter.Services
 @inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
-@inject NavigationManager NavigationManager
+@inject INavigationService NavigationService
 
 <PageTitle>Logout</PageTitle>
 
@@ -23,7 +24,7 @@
         CustomAuthenticationStateProvider.SetAuthenticationState(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
 
         await Task.Delay(TimeSpan.FromSeconds(1));
-        NavigationManager.NavigateTo("/signout", true);
+        NavigationService.GoTo("/signout", true);
     }
 
 }

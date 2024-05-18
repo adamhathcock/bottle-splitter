@@ -3,21 +3,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Logging;
 using Narochno.Primitives;
+using Speckle.InterfaceGenerator;
 
 namespace BottleSplitter.Services;
-
-public interface IPreferencesService
-{
-    public bool DarkMode { get; set; }
-    public Task Save();
-    public Task Load();
-}
 
 public class Preferences
 {
     public bool DarkMode { get; set; }
 }
 
+[GenerateAutoInterface]
 public class PreferencesService(
     ProtectedLocalStorage protectedLocalStorage,
     ILogger<PreferencesService> logger

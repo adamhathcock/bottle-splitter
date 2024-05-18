@@ -2,15 +2,11 @@
 using System.Threading.Tasks;
 using BottleSplitter.Model;
 using Microsoft.EntityFrameworkCore;
+using Speckle.InterfaceGenerator;
 
 namespace BottleSplitter.Services;
 
-public interface IUserManager
-{
-    ValueTask<Guid> SaveIfNotFound(SplitterUser splitterUser);
-    ValueTask<SplitterUser?> GetUserByEmail(string email);
-}
-
+[GenerateAutoInterface]
 public class UserManager(IDbContextFactory<SplitterDbContext> dbContextFactory) : IUserManager
 {
     public async ValueTask<Guid> SaveIfNotFound(SplitterUser splitterUser)

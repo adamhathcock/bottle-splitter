@@ -109,6 +109,12 @@
           "Serilog.Sinks.File": "5.0.0"
         }
       },
+      "Speckle.InterfaceGenerator": {
+        "type": "Direct",
+        "requested": "[0.9.2, )",
+        "resolved": "0.9.2",
+        "contentHash": "zEKT8L4BLZSC+seFTSKjHijQTj6dFxk40UYpsWBpVsIBT4d6UQId7cfjWAUf7Y95mioDZS2JbZ4fDnKyXS5+sg=="
+      },
       "Sqids": {
         "type": "Direct",
         "requested": "[3.1.0, )",

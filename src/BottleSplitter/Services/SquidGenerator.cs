@@ -1,13 +1,10 @@
 ﻿using System;
+using Speckle.InterfaceGenerator;
 using Sqids;
 
 namespace BottleSplitter.Services;
 
-public interface ISquidGenerator
-{
-    string GetSquid();
-}
-
+[GenerateAutoInterface]
 public class SquidGenerator : ISquidGenerator
 {
     private readonly Random _random = new();

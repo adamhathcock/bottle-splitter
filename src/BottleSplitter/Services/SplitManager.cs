@@ -5,16 +5,11 @@ using System.Threading.Tasks;
 using BottleSplitter.Model;
 using Microsoft.EntityFrameworkCore;
 using Narochno.Primitives;
+using Speckle.InterfaceGenerator;
 
 namespace BottleSplitter.Services;
 
-public interface ISplitManager
-{
-    ValueTask<List<BottleSplit>> GetSplits(Guid userId);
-    ValueTask CreateSplit(Guid currentUserId, BottleSplit split);
-    ValueTask<BottleSplit?> GetSplitBySquid(string splitId);
-}
-
+[GenerateAutoInterface]
 public class SplitManager(
     IDbContextFactory<SplitterDbContext> dbContextFactory,
     ISquidGenerator squidGenerator

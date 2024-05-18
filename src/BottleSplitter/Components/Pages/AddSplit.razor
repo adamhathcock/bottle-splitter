@@ -1,6 +1,7 @@
 ﻿@page "/add-split"
 @attribute [Authorize]
 @inject ISplitManager SplitManager;
+@inject INavigationService NavigationService
 @using System.Diagnostics.CodeAnalysis
 @using System.Security.Claims
 @using BottleSplitter.Infrastructure
@@ -26,14 +27,15 @@
                           @bind-Value="_model.ImageUrl" For="@(() => _model.ImageUrl)"/>
         </MudCardContent>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_disabled" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
         </MudCardActions>
     </MudForm>
 
 </MudCard>
 
 @code {
-    readonly BottleSplit _model = new ();
+    private readonly BottleSplit _model = new ();
+    private bool _disabled;
 
     private ClaimsPrincipal? _splitterUser;
 
@@ -57,7 +59,9 @@
 
         if (_form.IsValid)
         {
+            _disabled = true;
             await SplitManager.CreateSplit((_splitterUser?.GetId()).NotNull(), _model);
+            NavigationService.GoToIndex();
         }
     }
 

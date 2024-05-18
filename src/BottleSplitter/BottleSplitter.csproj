@@ -16,6 +16,7 @@
     <PackageReference Include="Scrutor" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Sqids" />
+    <PackageReference Include="Speckle.InterfaceGenerator" />
   </ItemGroup>
 
   <ItemGroup>

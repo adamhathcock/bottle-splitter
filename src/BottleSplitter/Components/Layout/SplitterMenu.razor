@@ -1,7 +1,8 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using BottleSplitter.Infrastructure
+@using BottleSplitter.Services
 
-@inject NavigationManager NavigationManager
+@inject INavigationService NavigationService
 
 <MudMenu Icon="@Icons.Material.Filled.Menu" Dense="true"  EndIcon="@Icons.Material.Filled.KeyboardArrowDown">
     <MudMenuItem  Href="/">Home</MudMenuItem>
@@ -33,7 +34,7 @@
 
     private void GitHubLogin()
     {
-        NavigationManager.NavigateTo("/challenge/github", true);
+        NavigationService.GoTo("/challenge/github", true);
     }
 
 }
