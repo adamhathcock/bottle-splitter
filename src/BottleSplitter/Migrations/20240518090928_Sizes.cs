@@ -10,60 +10,55 @@ namespace BottleSplitter.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Description",
-                table: "Splits");
+            migrationBuilder.DropColumn(name: "Description", table: "Splits");
 
-            migrationBuilder.DropColumn(
-                name: "DetailsUrl",
-                table: "Splits");
+            migrationBuilder.DropColumn(name: "DetailsUrl", table: "Splits");
 
-            migrationBuilder.DropColumn(
-                name: "ImageUrl",
-                table: "Splits");
+            migrationBuilder.DropColumn(name: "ImageUrl", table: "Splits");
 
-            migrationBuilder.DropColumn(
-                name: "TotalAvailable",
-                table: "Splits");
+            migrationBuilder.DropColumn(name: "TotalAvailable", table: "Splits");
 
             migrationBuilder.AddColumn<string>(
                 name: "Settings",
                 table: "Splits",
                 type: "jsonb",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Settings",
-                table: "Splits");
+            migrationBuilder.DropColumn(name: "Settings", table: "Splits");
 
             migrationBuilder.AddColumn<string>(
                 name: "Description",
                 table: "Splits",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "DetailsUrl",
                 table: "Splits",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<string>(
                 name: "ImageUrl",
                 table: "Splits",
                 type: "text",
-                nullable: true);
+                nullable: true
+            );
 
             migrationBuilder.AddColumn<int>(
                 name: "TotalAvailable",
                 table: "Splits",
                 type: "integer",
-                nullable: true);
+                nullable: true
+            );
         }
     }
 }

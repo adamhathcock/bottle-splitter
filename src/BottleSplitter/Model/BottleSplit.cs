@@ -16,7 +16,7 @@ public class BottleSplit : Auditable
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     public string Squid { get; set; } = default!;
 
-    public SplitSettings Settings { get; set; } = new ();
+    public SplitSettings Settings { get; set; } = new();
 
     public List<SplitterUser> Members { get; set; } = [];
 }

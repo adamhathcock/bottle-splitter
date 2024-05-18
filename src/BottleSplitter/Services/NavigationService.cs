@@ -7,6 +7,10 @@ namespace BottleSplitter.Services;
 public class NavigationService(NavigationManager navigationManager) : INavigationService
 {
     public void GoToIndex(bool refresh = false) => navigationManager.NavigateTo("/", refresh);
-    public void GoToSplits(bool refresh = false) => navigationManager.NavigateTo("/splits", refresh);
-    public void GoTo(string url, bool refresh = false) => navigationManager.NavigateTo(url, refresh);
+
+    public void GoToSplits(bool refresh = false) =>
+        navigationManager.NavigateTo("/splits", refresh);
+
+    public void GoTo(string url, bool refresh = false) =>
+        navigationManager.NavigateTo(url, refresh);
 }
