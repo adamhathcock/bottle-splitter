@@ -10,17 +10,28 @@ public class SplitterDbContext(DbContextOptions<SplitterDbContext> options) : Db
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SplitterUser>().HasIndex(u => u.Email);
+        modelBuilder.Entity<SplitterUser>()
+            .HasMany(x => x.Splits)
+            .WithMany(x => x.Members);
+
+
+        modelBuilder.Entity<SplitterUser>()
+            .HasIndex(u => u.Email);
+
+        modelBuilder.Entity<BottleSplit>()
+            .HasOne(x => x.Owner);
         modelBuilder.Entity<BottleSplit>()
             .OwnsOne(c => c.Settings, d =>
             {
                 d.ToJson();
-            });
+            })
+            .HasMany(x => x.Members)
+            .WithMany(x => x.Splits);
+
     }
 
     public DbSet<SplitterUser> Users { get; set; }
     public DbSet<BottleSplit> Splits { get; set; }
-    public DbSet<BottleSplitMembers> SplitMembers { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

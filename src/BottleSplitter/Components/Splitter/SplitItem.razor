@@ -2,13 +2,17 @@
 @using BottleSplitter.Model
 
 <MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudStack Row="true" Class="pa-1">
+                <MudText Class="pa-2">Split:</MudText>
+                <MudDivider Vertical="true"/>
+                <MudText Class="pa-2">@Split.Name</MudText>
+            </MudStack>
+        </CardHeaderContent>
+    </MudCardHeader>
     <MudCardContent>
-        <MudStack Row="true" Class="pa-1">
-            <MudText Class="pa-2">Name:</MudText>
-            <MudDivider Vertical="true"/>
-            <MudText Class="pa-2">@Split.Name</MudText>
-        </MudStack>
-        <MudDivider />
+        <MudDivider/>
         <MudStack Row="true" Class="pa-1">
             <MudText Class="pa-1">Url:</MudText>
             <MudDivider Vertical="true"/>
@@ -30,6 +34,7 @@
 @code {
 
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    [Parameter] [EditorRequired] public BottleSplit Split { get; set; } = default!;
+    [Parameter] [EditorRequired]
+    public BottleSplit Split { get; set; } = default!;
 
 }

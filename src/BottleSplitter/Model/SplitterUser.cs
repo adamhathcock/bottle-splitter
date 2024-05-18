@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace BottleSplitter.Model;
 
 public class SplitterUser : Auditable
@@ -10,4 +12,6 @@ public class SplitterUser : Auditable
     public string? City { get; set; }
     public string? County { get; set; }
     public string? Postcode { get; set; }
+
+    public List<BottleSplit> Splits { get; set; } = [];
 }

@@ -17,15 +17,6 @@ public class BottleSplit : Auditable
     public string Squid { get; set; } = default!;
 
     public SplitSettings Settings { get; set; } = new ();
-}
 
-public class SplitSettings
-{
-    public int? TotalAvailable { get; set; } = 700;//milliliters
-
-    public List<int> Sizes { get; set; } = [50, 100];
-
-    public string? Description { get; set; }
-    public string? DetailsUrl { get; set; }
-    public string? ImageUrl { get; set; }
+    public List<SplitterUser> Members { get; set; } = [];
 }
