@@ -37,7 +37,8 @@ public class SplitManager(
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
         return await context
-            .Splits.Include(x => x.Members)
+            .Splits.Include(x => x.Owner)
+            .Include(x => x.Members)
             .ThenInclude(x => x.User)
             .FirstOrDefaultAsync(x => x.Squid == squid);
     }
