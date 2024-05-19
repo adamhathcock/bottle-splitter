@@ -1,0 +1,75 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using BottleSplitter.Infrastructure
+@using BottleSplitter.Model
+@using BottleSplitter.Services
+
+@inject ISplitManager SplitManager;
+@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider;
+
+<MudOverlay Visible="_visible">
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>Join split: @Split.Name</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudChipSet>
+            @foreach (var value in @Split.Settings.Sizes)
+            {
+                <MudChip Text="@(value + " (ml)")"></MudChip>
+            }
+        </MudChipSet>
+        <MudStack Row="true">
+            <MudText>Request amount:</MudText>
+            <MudNumericField @ref="_numericField" T="int" Label="Size to add" HelperText="Milliliters" Class="mt-3"/>
+            <MudIconButton Disabled="_disabled" Icon="@Icons.Material.Filled.Add" OnClick="async () => await Add()"></MudIconButton>
+        </MudStack>
+    </MudCardContent>
+</MudCard>
+</MudOverlay>
+
+@code {
+
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    private MudNumericField<int> _numericField = default!;
+
+    public SplitMembership? Membership { get; set; }
+
+
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [Parameter]
+    [EditorRequired]
+    public BottleSplit Split { get; set; }= default!;
+
+    private bool _disabled;
+    private bool _visible;
+
+    [Parameter]
+    public EventCallback OnClosing { get; set; }
+
+    [Parameter]
+    public bool Visible
+    {
+        get => _visible;
+        set
+        {
+            _visible = value;
+            _disabled = false;
+        }
+    }
+
+    private async ValueTask Add()
+    {
+        _disabled = true;
+        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userId = state.User.GetId();
+        if (Membership is null && userId is not null)
+        {
+            await SplitManager.CreateMembership(Split.Id, userId.Value, _numericField.Value);
+        }
+
+        await OnClosing.InvokeAsync();
+    }
+
+}

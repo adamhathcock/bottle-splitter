@@ -36,6 +36,40 @@ public class SplitManager(
     public async ValueTask<BottleSplit?> GetSplitBySquid(string squid)
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
-        return await context.Splits.FirstOrDefaultAsync(x => x.Squid == squid);
+        return await context
+            .Splits.Include(x => x.Members)
+            .ThenInclude(x => x.User)
+            .FirstOrDefaultAsync(x => x.Squid == squid);
+    }
+
+    public async ValueTask CreateMembership(Guid splitId, Guid userId, int amount)
+    {
+        await using var context = await dbContextFactory.CreateDbContextAsync();
+        var split = await context.Splits.FindAsync(splitId);
+        if (split is null)
+        {
+            throw new InvalidOperationException();
+        }
+        var user = await context.Users.FindAsync(userId);
+        if (user is null)
+        {
+            throw new InvalidOperationException();
+        }
+        var membership = await context.Memberships.FirstOrDefaultAsync(x =>
+            x.User == user && x.Split == split
+        );
+        if (membership is not null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        membership = new SplitMembership()
+        {
+            Amount = amount,
+            Split = split,
+            User = user
+        };
+        await context.Memberships.AddAsync(membership);
+        await context.SaveChangesAsync();
     }
 }

@@ -18,5 +18,5 @@ public class BottleSplit : Auditable
 
     public SplitSettings Settings { get; set; } = new();
 
-    public List<SplitterUser> Members { get; set; } = [];
+    public List<SplitMembership> Members { get; set; } = [];
 }

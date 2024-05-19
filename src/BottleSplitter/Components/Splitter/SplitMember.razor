@@ -1,0 +1,24 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using BottleSplitter.Model
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText>@Membership.User.Email</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudStack>
+            <SplitItemLine Name="Amount Request:" Value="@Membership.Amount"/>
+            <MudSpacer/>
+            <SplitItemLine Name="First Name:" Value="@Membership.User.FirstName"/>
+            <SplitItemLine Name="Last Name:" Value="@Membership.User.LastName"/>
+        </MudStack>
+    </MudCardContent>
+</MudCard>
+
+@code
+{
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [Parameter] [EditorRequired]
+    public SplitMembership Membership { get; set; } = default!;
+}

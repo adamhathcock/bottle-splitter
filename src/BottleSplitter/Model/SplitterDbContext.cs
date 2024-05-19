@@ -10,7 +10,7 @@ public class SplitterDbContext(DbContextOptions<SplitterDbContext> options) : Db
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<SplitterUser>().HasMany(x => x.Splits).WithMany(x => x.Members);
+        modelBuilder.Entity<SplitterUser>().HasMany(x => x.SplitsMemberships).WithOne(x => x.User);
 
         modelBuilder.Entity<SplitterUser>().HasIndex(u => u.Email);
 
@@ -25,11 +25,18 @@ public class SplitterDbContext(DbContextOptions<SplitterDbContext> options) : Db
                 }
             )
             .HasMany(x => x.Members)
-            .WithMany(x => x.Splits);
+            .WithOne(x => x.Split);
+
+        modelBuilder
+            .Entity<SplitMembership>()
+            .HasOne(x => x.User)
+            .WithMany(x => x.SplitsMemberships);
+        modelBuilder.Entity<SplitMembership>().HasOne(x => x.Split).WithMany(x => x.Members);
     }
 
     public DbSet<SplitterUser> Users { get; set; }
     public DbSet<BottleSplit> Splits { get; set; }
+    public DbSet<SplitMembership> Memberships { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

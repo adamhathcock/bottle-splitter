@@ -1,8 +1,13 @@
 ﻿@page "/splits/{Squid}"
+@using System.Diagnostics.CodeAnalysis
+@using System.Security.Claims
+@using BottleSplitter.Infrastructure
 @using BottleSplitter.Model
 @using BottleSplitter.Services
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
+
+@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
 
 @inject ISplitManager SplitManager;
 
@@ -11,19 +16,64 @@
     <SplitItem Split="@Split"/>
 }
 
+@if (_currentUser?.GetId() == Split?.Owner.Id)
+{
+    @if (Split?.Members.Any() ?? false)
+    @foreach (var member in Split.Members)
+    {
+        <SplitMember Membership="member"/>
+    }
+}
+else if (Membership is not null)
+{
+    <MudStack Row="true">
+        <MudText>Requested: @Membership.Amount</MudText>
+        <MudButton OnClick="Edit">Edit</MudButton>
+    </MudStack>
+}
+else
+{
+    <MudButton OnClick="Join">Join</MudButton>
+}
+
+<EditSplitMembership @ref="_editSplitMembership" Visible="_editMembershipVisible" Split="Split" Closing="OnClosingMembership"/>
+
 @code {
     [Parameter]
     public string? Squid { get; set; }
 
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    private EditSplitMembership _editSplitMembership = default!;
+
     private BottleSplit? Split { get; set; }
+    private SplitMembership? Membership { get; set; }
+    private ClaimsPrincipal? _currentUser;
+    private bool _editMembershipVisible;
 
     protected override async Task OnInitializedAsync()
     {
-        if (Squid is null)
+        await OnClosingMembership();
+        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        _currentUser = state.User;
+        Membership = Split?.Members.First(x => x.User.Id == _currentUser.GetId());
+    }
+
+
+    private void Join()
+    {
+        _editMembershipVisible = true;
+    }
+    private void Edit()
+    {
+        throw new NotImplementedException();
+    }
+
+    private async ValueTask OnClosingMembership()
+    {if (Squid is null)
         {
             return;
         }
         Split = await SplitManager.GetSplitBySquid(Squid);
-    }
 
+    }
 }
