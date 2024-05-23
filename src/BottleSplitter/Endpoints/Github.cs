@@ -33,7 +33,8 @@ public static class Github
                 Results.Challenge(
                     properties: new() { RedirectUri = "/" },
                     authenticationSchemes: [GoogleDefaults.AuthenticationScheme]
-                ));
+                )
+        );
     }
 
     public static void AddGithub(
