@@ -39,11 +39,11 @@ jobs:
           aws-region: eu-west-2
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{secrets.AWS_SECRET_KEY}}
-        
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-  
+
       - name: Create Build and Tag
         env:
           IMAGE_SHA_TAG: ${{ github.sha }}
@@ -54,7 +54,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_SHA_TAG
 
       - name: Push the Docker Image to lightsail
-        env: 
+        env:
           IMAGE_SHA_TAG: ${{ github.sha }}
           IMAGE_URL: ${{ steps.login-ecr.outputs.registry }}/${{env.SERVICE_NAME}}:${{ github.sha }}
         run: >
@@ -62,12 +62,12 @@ jobs:
           --service-name ${{env.SERVICE_NAME}}
           --image $IMAGE_URL
           --region eu-west-2
-          --label git-push      
+          --label git-push
 
-      - name: Save updated LIGHTSAIL_IMAGE_TAG 
+      - name: Save updated LIGHTSAIL_IMAGE_TAG
         run: |
           echo "LIGHTSAIL_DOCKER_IMAGE=$(aws lightsail get-container-images --service-name ${{ env.SERVICE_NAME }} --region eu-west-2 | jq -r .containerImages[0].image)"  >> $GITHUB_ENV
-        
+
       - name: Start New Deployment to Light Sail
         run: |
           aws lightsail create-container-service-deployment  --region eu-west-2 \
@@ -80,6 +80,8 @@ jobs:
                   \"VERSION\": \"${{github.run_number}}\",
                   \"OAUTH_GITHUB_ID\": \"${{secrets.OAUTH_GITHUB_ID}}\",
                   \"OAUTH_GITHUB_SECRET\": \"${{secrets.OAUTH_GITHUB_SECRET}}\",
+                  \"OAUTH_GOOGLE_ID\": \"${{secrets.OAUTH_GOOGLE_ID}}\",
+                  \"OAUTH_GOOGLE_SECRET\": \"${{secrets.OAUTH_GOOGLE_SECRET}}\",
                   \"CONNECTION_STRING\": \"${{secrets.CONNECTION_STRING}}\"
                 },
               \"ports\": {
@@ -94,9 +96,9 @@ jobs:
               \"path\": \"/health\",
               \"intervalSeconds\": 10
             }
-          }"      
+          }"
       - name: Push the Docker Image to lightsail
-        env: 
+        env:
           IMAGE_SHA_TAG: ${{ github.sha }}
           IMAGE_URL: ${{ steps.login-ecr.outputs.registry }}/${{env.SERVICE_NAME}}:${{ github.sha }}
         run: >
