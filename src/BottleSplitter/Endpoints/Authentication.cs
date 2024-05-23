@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Narochno.Primitives;
 
 namespace BottleSplitter.Endpoints;
 
@@ -21,6 +22,12 @@ public static class Authentication
             {
                 o.LoginPath = "/";
                 o.LogoutPath = "/signout";
+            })
+            .AddGoogle(g =>
+            {
+                g.ClientId = configuration["OAUTH_GOOGLE_ID"].NotNull();
+                g.ClientSecret = configuration["OAUTH_GOOGLE_SECRET"].NotNull();
+                g.CallbackPath = "/callback/google";
             })
             .AddGithub(configuration);
 }

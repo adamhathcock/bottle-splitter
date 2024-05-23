@@ -5,6 +5,7 @@ using BottleSplitter.Infrastructure;
 using BottleSplitter.Model;
 using BottleSplitter.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,8 @@ namespace BottleSplitter.Endpoints;
 
 public static class Github
 {
-    public static void UseGithub(this WebApplication application) =>
+    public static void UseGithub(this WebApplication application)
+    {
         application.MapGet(
             "challenge/github",
             () =>
@@ -25,6 +27,14 @@ public static class Github
                     authenticationSchemes: [GitHubAuthenticationDefaults.AuthenticationScheme]
                 )
         );
+        application.MapGet(
+            "challenge/google",
+            () =>
+                Results.Challenge(
+                    properties: new() { RedirectUri = "/" },
+                    authenticationSchemes: [GoogleDefaults.AuthenticationScheme]
+                ));
+    }
 
     public static void AddGithub(
         this AuthenticationBuilder builder,

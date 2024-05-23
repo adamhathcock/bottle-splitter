@@ -16,6 +16,7 @@
     }
     else
     {
+        <MudMenuItem OnClick="GoogleLogin">Login via Google</MudMenuItem>
         <MudMenuItem OnClick="GitHubLogin">Login via Github</MudMenuItem>
     }
 </MudMenu>
@@ -36,5 +37,8 @@
     {
         NavigationService.GoTo("/challenge/github", true);
     }
-
+    private void GoogleLogin()
+    {
+        NavigationService.GoTo("/challenge/google", true);
+    }
 }
