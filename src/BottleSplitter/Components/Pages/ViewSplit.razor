@@ -28,7 +28,8 @@
         <MudText>No members yet!</MudText>
     }
 }
-else if (Membership is not null)
+
+@if (Membership is not null)
 {
     <MudStack Row="true">
         <MudText>Requested: @Membership.Amount</MudText>

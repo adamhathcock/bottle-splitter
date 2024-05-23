@@ -12,9 +12,16 @@
 <PageTitle>My Splits</PageTitle>
 <MudText Typo="Typo.h2" Class="pa-4">Active Splits</MudText>
 
-@foreach (var split in _model)
+@if (_model.Any())
 {
-    <SplitItem Split="split"/>
+    @foreach (var split in _model)
+    {
+        <SplitItem Split="split"/>
+    }
+}
+else
+{
+    <MudText>No splits made yet!</MudText>
 }
 
 @code {
