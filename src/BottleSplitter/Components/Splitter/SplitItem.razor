@@ -5,19 +5,13 @@
     <MudCardHeader>
         <CardHeaderContent>
             <MudStack Row="true" Class="pa-1">
-                <MudText Class="pa-2">Split:</MudText>
-                <MudDivider Vertical="true"/>
-                <MudText Class="pa-2">@Split.Name</MudText>
+                <MudText Typo="Typo.h3">Split:</MudText>
+                <MudText Typo="Typo.h3">@Split.Name</MudText>
             </MudStack>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
-        <MudDivider/>
-        <MudStack Row="true" Class="pa-1">
-            <MudText Class="pa-1">Url:</MudText>
-            <MudDivider Vertical="true"/>
-            <MudLink Class="pa-1" Href="@($"/splits/{Split.Squid}")">@Split.Squid</MudLink>
-        </MudStack>
+        <SplitItemLine Name="Url:" Value="@Split.Squid" Link="@($"/splits/{Split.Squid}")" Type="SplitItemType.Link"/>
         <SplitItemLine Name="Description:" Value="@Split.Settings.Description"/>
         <SplitItemLine Name="Link:" Value="@Split.Settings.DetailsUrl"/>
         <SplitItemLine Name="Image:" Value="@Split.Settings.ImageUrl"/>
