@@ -1,14 +1,46 @@
 ﻿@page "/"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Server
 
+@inject ServerAuthenticationStateProvider ServerAuthenticationStateProvider;
 <PageTitle>Bottle Splitter!</PageTitle>
 
 <MudText Typo="Typo.h6">Bottle Splitter!</MudText>
-<MudCard>
-    <MudCardContent>
-        <MudText>Please login to Create a split or join one.</MudText>
-        <MudText Typo="Typo.body2">Go to github issues to request features.</MudText>
-    </MudCardContent>
-    <MudCardActions>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@Consts.GitHubHome">Learn More</MudButton>
-    </MudCardActions>
-</MudCard>
+
+@if (_splitterUser is null)
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText>Please login to Create a split or join one.</MudText>
+            <MudText Typo="Typo.body2">Go to github issues to request features.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@Consts.GitHubHome">Learn More</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText>Create a split or join one.</MudText>
+            <MudText Typo="Typo.body2">Go to github issues to request features.</MudText>
+        </MudCardContent>
+        <MudCardContent>
+            <MudStack>
+                <MudLink Href="/splits" Icon="@Icons.Material.Filled.FormatListBulleted">View your Splits</MudLink>
+                <MudLink Href="/add-split" Icon="@Icons.Custom.Brands.Awesome">Add a Split</MudLink>
+            </MudStack>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code
+{
+    private ClaimsPrincipal? _splitterUser;
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await ServerAuthenticationStateProvider.GetAuthenticationStateAsync();
+        _splitterUser = state.User;
+    }
+}

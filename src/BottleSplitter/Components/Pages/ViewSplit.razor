@@ -29,11 +29,10 @@
         <MudText>No members yet!</MudText>
     }
 }
-
 @if (Membership is not null)
 {
     <MudStack Row="true">
-        <MudText>Requested: @Membership.Amount</MudText>
+        <MudText>You've requested: @Membership.Amount</MudText>
         <MudButton OnClick="Edit">Edit</MudButton>
     </MudStack>
 }
