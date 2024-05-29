@@ -3,9 +3,10 @@
 @using BottleSplitter.Infrastructure
 @using BottleSplitter.Services
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Server
 @attribute [Authorize]
 
-@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
+@inject ServerAuthenticationStateProvider ServerAuthenticationStateProvider
 @inject ISplitManager SplitManager;
 @inject INavigationService NavigationService;
 

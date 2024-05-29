@@ -7,6 +7,7 @@
 @using BottleSplitter.Model
 @using BottleSplitter.Services
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Server
 @using Narochno.Primitives
 
 <PageTitle>My Splits</PageTitle>
@@ -30,11 +31,11 @@ else
     private SplitterUser? _splitterUser;
     [Inject]
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public CustomAuthenticationStateProvider CustomAuthenticationStateProvider { get; set; } = default!;
+    public ServerAuthenticationStateProvider ServerAuthenticationStateProvider { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await ServerAuthenticationStateProvider.GetAuthenticationStateAsync();
         var email = state.User.GetEmail().NotNull();
         _splitterUser = await UserManager.GetUserByEmail(email);
         _model = await SplitManager.GetSplits(_splitterUser.NotNull().Id);

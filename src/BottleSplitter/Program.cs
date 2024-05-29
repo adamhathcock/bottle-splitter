@@ -7,11 +7,11 @@ using BottleSplitter.Model;
 using BottleSplitter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using MudBlazor.Services;
 using Narochno.EnvFile;
 using Serilog;
@@ -71,9 +71,9 @@ builder.Services.AddBottleSplitterAuth(builder.Configuration);
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<ServerAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
-    sp.GetRequiredService<CustomAuthenticationStateProvider>()
+    sp.GetRequiredService<ServerAuthenticationStateProvider>()
 );
 builder.Services.AddScoped<IPreferencesService, PreferencesService>();
 builder.Services.Scan(x => x.FromEntryAssembly().AddClasses().AsMatchingInterface());

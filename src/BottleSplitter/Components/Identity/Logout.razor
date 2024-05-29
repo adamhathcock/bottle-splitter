@@ -1,8 +1,8 @@
 ﻿@page "/logout"
 @using System.Security.Claims
-@using BottleSplitter.Infrastructure
 @using BottleSplitter.Services
-@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
+@using Microsoft.AspNetCore.Components.Server
+@inject ServerAuthenticationStateProvider ServerAuthenticationStateProvider
 @inject INavigationService NavigationService
 
 <PageTitle>Logout</PageTitle>
@@ -21,7 +21,7 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        CustomAuthenticationStateProvider.SetAuthenticationState(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
+        ServerAuthenticationStateProvider.SetAuthenticationState(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
 
         await Task.Delay(TimeSpan.FromSeconds(1));
         NavigationService.GoTo("/signout", true);

@@ -2,7 +2,7 @@
 @attribute [Authorize]
 @inject ISplitManager SplitManager;
 @inject INavigationService NavigationService
-@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider;
+@inject ServerAuthenticationStateProvider ServerAuthenticationStateProvider;
 
 @using System.Diagnostics.CodeAnalysis
 @using System.Security.Claims
@@ -10,6 +10,7 @@
 @using BottleSplitter.Model
 @using BottleSplitter.Services
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Server
 @using Narochno.Primitives
 
 <PageTitle>Add a New Bottle Split</PageTitle>
@@ -66,7 +67,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await ServerAuthenticationStateProvider.GetAuthenticationStateAsync();
         _splitterUser = state.User;
     }
 

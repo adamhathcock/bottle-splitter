@@ -2,9 +2,10 @@
 @using BottleSplitter.Infrastructure
 @using BottleSplitter.Model
 @using BottleSplitter.Services
+@using Microsoft.AspNetCore.Components.Server
 
 @inject ISplitManager SplitManager;
-@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider;
+@inject ServerAuthenticationStateProvider ServerAuthenticationStateProvider;
 
 <MudOverlay Visible="_visible">
 <MudCard>
@@ -62,7 +63,7 @@
     private async ValueTask Add()
     {
         _disabled = true;
-        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await ServerAuthenticationStateProvider.GetAuthenticationStateAsync();
         var userId = state.User.GetId();
         if (Membership is null && userId is not null)
         {

@@ -26,7 +26,7 @@ public partial class ViewSplit
     protected override async Task OnInitializedAsync()
     {
         await OnClosingMembership();
-        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await ServerAuthenticationStateProvider.GetAuthenticationStateAsync();
         _currentUser = state.User;
         Membership = Split?.Members.FirstOrDefault(x => x.User.Id == _currentUser.GetId());
     }

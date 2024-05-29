@@ -1,10 +1,11 @@
 @using System.Security.Claims
 @using BottleSplitter.Infrastructure
 @using BottleSplitter.Services
+@using Microsoft.AspNetCore.Components.Server
 @inherits LayoutComponentBase
 @inject IPreferencesService PreferencesService
 @inject INavigationService NavigationService
-@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
+@inject ServerAuthenticationStateProvider ServerAuthenticationStateProvider
 
 <MudThemeProvider @bind-IsDarkMode="@PreferencesService.DarkMode" Theme="_theme"/>
 
@@ -42,7 +43,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var state = await ServerAuthenticationStateProvider.GetAuthenticationStateAsync();
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
             _currentUser = state.User;
