@@ -33,11 +33,21 @@ public class SplitManager(
         await context.SaveChangesAsync();
     }
 
+    public async ValueTask SaveSplit(BottleSplit updated)
+    {
+        await using var context = await dbContextFactory.CreateDbContextAsync();
+        var split = await context.Splits.FindAsync(updated.Id).NotNull();
+        split.Name = updated.Name;
+        split.Settings = updated.Settings;
+        await context.SaveChangesAsync();
+    }
+
     public async ValueTask<BottleSplit?> GetSplitBySquid(string squid)
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
         return await context
-            .Splits.Include(x => x.Owner)
+            .Splits.AsNoTracking()
+            .Include(x => x.Owner)
             .Include(x => x.Members)
             .ThenInclude(x => x.User)
             .FirstOrDefaultAsync(x => x.Squid == squid);

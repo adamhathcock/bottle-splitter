@@ -6,8 +6,8 @@
 @attribute [Authorize]
 
 @inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider
-
 @inject ISplitManager SplitManager;
+@inject INavigationService NavigationService;
 
 @if (Split is not null)
 {

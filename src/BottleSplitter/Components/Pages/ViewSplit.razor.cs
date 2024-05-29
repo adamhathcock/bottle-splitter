@@ -36,10 +36,7 @@ public partial class ViewSplit
         _editMembershipVisible = true;
     }
 
-    private void Edit()
-    {
-        throw new NotImplementedException();
-    }
+    private void Edit() => NavigationService.GoTo($"/splits/{Squid}/edit");
 
     private async ValueTask OnClosingMembership()
     {

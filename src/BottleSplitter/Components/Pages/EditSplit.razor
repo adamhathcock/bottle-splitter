@@ -1,14 +1,14 @@
-﻿@page "/add-split"
+﻿@page "/splits/{Squid}/edit"
 @attribute [Authorize]
 @inject ISplitManager SplitManager;
 @inject INavigationService NavigationService
-@inject CustomAuthenticationStateProvider CustomAuthenticationStateProvider;
 
 @using System.Diagnostics.CodeAnalysis
 @using System.Security.Claims
 @using BottleSplitter.Infrastructure
 @using BottleSplitter.Model
 @using BottleSplitter.Services
+@using FluentValidation
 @using Microsoft.AspNetCore.Authorization
 @using Narochno.Primitives
 
@@ -55,9 +55,10 @@
 </MudCard>
 
 @code {
-    private readonly BottleSplit _model = new ();
+    [Parameter]
+    public string? Squid { get; set; }
+    private BottleSplit _model = new ();
     private bool _disabled;
-    private ClaimsPrincipal? _splitterUser;
 
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
     private MudNumericField<int> _numericField = default!;
@@ -66,8 +67,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
-        _splitterUser = state.User;
+        if (Squid is null)
+        {
+            return;
+        }
+        _model = await SplitManager.GetSplitBySquid(Squid).NotNull();
     }
 
     readonly BottleSplitFluentValidator _modelValidator = new ();
@@ -89,9 +93,8 @@
         if (_form.IsValid)
         {
             _disabled = true;
-            await SplitManager.CreateSplit((_splitterUser?.GetId()).NotNull(), _model);
+            await SplitManager.SaveSplit(_model);
             NavigationService.GoToSplits();
         }
     }
-
 }
